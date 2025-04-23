@@ -1,4 +1,4 @@
-import { accounts, actions } from "../../store/Data";
+import { accounts } from "../../store/Data";
 
 export default function CustomTable() {
     return (
@@ -12,7 +12,7 @@ export default function CustomTable() {
                             <th className="px-4 py-3">Universities</th>
                             <th className="px-4 py-3">Status</th>
                             <th className="px-4 py-3">Register Date</th>
-                            <th className="px-4 py-3">Actions</th>
+                            <th className="px-4 py-3">Operation</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
@@ -49,23 +49,13 @@ export default function CustomTable() {
                                         {account.status}
                                     </span>
                                 </td>
+
                                 <td className="px-4 py-3 text-sm">
                                     {account.date}
                                 </td>
+
                                 <td className="px-4 py-3 text-sm">
-                                    <div className="flex items-center space-x-4 text-sm">
-                                        {actions.map((a => (
-                                            <button
-                                                key={a.id}
-                                                className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray cursor-pointer"
-                                                aria-label={a.label}
-                                            >
-                                                <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d={a.d} fillRule="evenodd" clipRule="evenodd"></path>
-                                                </svg>
-                                            </button>
-                                        )))}
-                                    </div>
+                                    $ 863.45
                                 </td>
                             </tr>
                         ))}
