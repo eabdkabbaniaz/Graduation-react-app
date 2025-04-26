@@ -1,12 +1,12 @@
 import CustomCard from "../../ui-components/CustomCard";
 import CustomCharts from "../../ui-components/CustomCharts";
-import CustomTable from "../../ui-components/CustomTable";
 import { cards } from "../../../store/Data";
 import MainContent from "../layout/MainContent";
+import UniversityTable from "../Universities/UniversityTable";
 
-export default function DashboardPage({ name }) {
+export default function DashboardPage({ name , description }) {
     return (
-        <MainContent name={name}>
+        <MainContent name={name} description={description}>
             {/* <!-- Cards --> */}
             <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
                 {/* <!-- Card --> */}
@@ -20,8 +20,7 @@ export default function DashboardPage({ name }) {
                     />
                 ))}
             </div>
-
-            <CustomTable />
+            <UniversityTable />
 
             <CustomCharts />
         </MainContent>

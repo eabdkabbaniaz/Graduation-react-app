@@ -18,7 +18,7 @@ export default function Sidebar(props) {
           <Element key={n.id} name={n.name} icon={n.icon} icon2={n.icon2} />
         ))}
 
-        <Link to="create_account"><Button name="Create account" signal="+" /></Link>
+        <Link to="create_account"><Button name="Create account" signal="+" parentStyle="px-6 my-6" size="large" /></Link>
 
       </div>
     </aside>

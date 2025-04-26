@@ -1,5 +1,3 @@
-import React from 'react';
-// spinner من اجل تحميل البيانات 
 const Spinner = () => {
   return (
     <div className="flex justify-center items-center py-6">
