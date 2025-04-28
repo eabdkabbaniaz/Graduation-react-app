@@ -27,7 +27,7 @@ import axiosInstance from "./axiosInstance";
 export const fetchStudents = async (page = 1) => {
   try {
     const response = await axiosInstance.get(`/studentAdmin/index?page=${page}`);
-    const { data, last_page } = response.data;
+    const { data, last_page } = response.data.data;
     return {
       students: data,
       last_page,
