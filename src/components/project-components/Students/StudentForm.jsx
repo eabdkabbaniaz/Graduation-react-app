@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../ui-components/Button";
 import { createStudent } from "../../../Api/studentApi";
-import axios from "axios";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
 import { fetchCategory } from "../../../Api/categories";
 
-const EmployeeForm = () => {
+const StudentForm = () => {
     const [name, setName] = useState('');
     const [universityNumber, setUniversityNumber] = useState('');
     const [categoryId, setCategoryId] = useState('');
@@ -69,7 +68,7 @@ const EmployeeForm = () => {
         <div className="flex justify-end">
             <div className="fixed bottom-4 right-6  mt-4">
                 <Button
-                    name="إضافة طالب"
+                    name="Add student"
                     signal="+"
                     onClick={() => setIsModalOpen(true)}
                 />
@@ -89,6 +88,4 @@ const EmployeeForm = () => {
         </div>
     );
 };
-export default EmployeeForm;
-
-
+export default StudentForm;

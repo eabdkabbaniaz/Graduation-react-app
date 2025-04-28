@@ -1,6 +1,6 @@
 import { useState } from "react";
 export default function Button({
-  name = "زر",
+  name = "button",
   signal = "+",
   className = "",
   onClick = () => { },
@@ -16,6 +16,7 @@ export default function Button({
   hoverText = "",
   borderRadius = "rounded-lg",
   marginTop = "mt-0",
+  parentStyle
 }) {
 
   const [isHovered, setIsHovered] = useState(false);
@@ -26,12 +27,10 @@ export default function Button({
     danger: "bg-red-500 hover:bg-red-600",
   };
 
-
-
   const sizeClasses = {
-    small: "px-2 py-1 text-sm",
-    normal: "px-4 py-2 text-sm",
-    large: "px-6 py-3 text-lg",
+    small: "px-2 py-1",
+    normal: "px-4 py-2",
+    large: "px-9 py-1",
   };
 
   const backgroundClass = transparentBackground
@@ -41,12 +40,12 @@ export default function Button({
       : variantClasses[variant];
 
   return (
+    <div className={parentStyle}>
     <button
       type={type}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-
       className={`flex items-center justify-center font-medium leading-5 ${sizeClasses[size]} ${textColor} transition-colors duration-150 ${backgroundClass} ${className} ${borderRadius} ${marginTop}`}
       style={{
         background: transparentBackground ? 'transparent' : undefined,
@@ -62,6 +61,6 @@ export default function Button({
         </span>
       )}
     </button>
+    </div>
   );
 }
-

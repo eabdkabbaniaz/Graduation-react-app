@@ -1,10 +1,10 @@
-import CustomTable from "../../ui-components/CustomTable";
 import MainContent from "../layout/MainContent";
+import UniversityTable from "./UniversityTable";
 
-export default function Universities({ name }) {
+export default function Universities({ name , description}) {
     return (
-        <MainContent name={name}>
-            <CustomTable />
+        <MainContent name={name} description={description}>
+            <UniversityTable />
         </MainContent>
     )
 }

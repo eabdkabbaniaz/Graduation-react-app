@@ -3,11 +3,12 @@ import { deleteStudent, fetchStudents, showStudetnt } from "../../../Api/student
 import Pagination from "../../ui-components/Pagination";
 import Spinner from "../../ui-components/Spinner";
 import Button from "../../ui-components/Button";
-import DeleteConfirmationModal from "../../ui-components/DeleteConfirmationModal";
 import ShowDetalisModel from "../../ui-components/ShowDetalisModel";
-import ReusableTable from "../../ui-components/ReusableTable";
+import CustomTable from "../../ui-components/CustomTable";
+import { actions } from "../../../store/Data";
+import DeleteModal from "../../ui-components/DeleteModal";
 
-const EmployeeTable = () => {
+const StudentTable = () => {
     const [students, setStudents] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -15,9 +16,8 @@ const EmployeeTable = () => {
     const [isWaiting, setIsWaiting] = useState(false);
     const [error, setError] = useState(null);
 
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [studentToDelete, setStudentToDelete] = useState(null);
-
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [studentId, setStudentId] = useState(null);
 
     const [ShowDetalisModalOpen, setShowDetalisModalOpen] = useState(false);
     const [showDetalisStudent, setShowDetalisStudent] = useState([]);
@@ -26,7 +26,7 @@ const EmployeeTable = () => {
         const getData = async () => {
             try {
                 setIsWaiting(true);
-                const { students, last_page } = await fetchStudents(currentPage);
+                const { students, last_page } = await fetchStudents();
                 setStudents(students);
                 setTotalPages(last_page);
             } catch (error) {
@@ -36,26 +36,21 @@ const EmployeeTable = () => {
             }
         };
         getData();
-    }, [currentPage]);
+    }, []);
 
-    useEffect(() => {
-        console.log("تم تحميل الطلاب:", students);
-    }, [students]);
-
-    const handlePageChange = (pageNumber) => {
-        if (pageNumber >= 1 && pageNumber <= totalPages) {
-            setCurrentPage(pageNumber);
-        }
-    };
+    // const handlePageChange = (pageNumber) => {
+    //     if (pageNumber >= 1 && pageNumber <= totalPages) {
+    //         setCurrentPage(pageNumber);
+    //     }
+    // };
 
     const confirmDelete = () => {
-        if (studentToDelete) {
-            deleteStudent(studentToDelete)
+        if (studentId) {
+            deleteStudent(studentId)
                 .then(() => {
-                    setStudents(prev => prev.filter(s => s.id !== studentToDelete));
-                    setSuccessMessage("✅ تم الحذف بنجاح");
-                    setTimeout(() => setSuccessMessage(""), 3000);
-                    setDeleteModalOpen(false);
+                    setStudents(prev => prev.filter(s => s.id !== studentId));
+                    setTimeout(() => {}, 3000);
+                    setShowDeleteModal(false);
                 })
                 .catch(err => {
                     console.log("حدث خطأ:", err);
@@ -64,9 +59,8 @@ const EmployeeTable = () => {
     };
 
     const handleDelete = (student_id) => {
-        setStudentToDelete(student_id);
-        setDeleteModalOpen(true);
-        console.log("student_id" + student_id);
+        setStudentId(student_id);
+        setShowDeleteModal(true)
     }
 
     const handelDetalis = async (student_id) => {
@@ -90,6 +84,13 @@ const EmployeeTable = () => {
 
     return (
         <div>
+            {showDeleteModal && <DeleteModal
+                onClose={() => setShowDeleteModal(false)} 
+                onClick={confirmDelete}
+                title="Delete Student"
+                message="do you confirm to delete 'name' student"
+                
+                />}
             {error && (
                 <div className="text-center text-red-600 font-bold py-4">
                     {error}
@@ -98,69 +99,101 @@ const EmployeeTable = () => {
             {isWaiting ? (
                 <Spinner />
             ) : (
-                <ReusableTable
-                    columns={["id", "اسم الطالب", "الرقم الجامعي", "الفئة", 'اسم الاب', 'اسم الام', 'الاجراء']}
+                <CustomTable
+                    columns={[ "name","uni_number","father_name","mother_name","Operation"]}
                     data={students}
                     renderRow={(student) => (
-                        <tr key={student.id} className="font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800 text-center">
-                            <td className="px-4 py-3">{student.id}</td>
-                            <td className="px-4 py-3">{student.name}</td>
-                            <td className="px-4 py-3">{student.email}</td>
-                            <td className="px-4 py-3">{student.students.category?.name || 'غير مصنّف'}</td>
-                            <td className="px-4 py-3">احمد</td>
-                            <td className="px-4 py-3">يارا</td>
-                            <td className="w-1 text-center">
-                                <div className="flex justify-center gap-2">
-                                    <Button name="" signal="👁️"
-                                        onClick={() => handelDetalis(student.id)}
-                                        variant="info"
-                                        iconPosition="start"
-                                        size="small"
-                                        transparentBackground={true}
-                                        hoverText="عرض التفاصيل"
+                        <tr className="text-gray-700 dark:text-gray-400" key={student.id}>
+                        <td className="px-4 py-3">
+                            <div className="flex items-center text-sm">
+                                {/* <!-- Avatar with inset shadow --> */}
+                                <div className="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                                    <img
+                                        className="object-cover w-full h-full rounded-full"
+                                        src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+                                        alt=""
+                                        loading="lazy"
                                     />
-                                    <Button name="" signal="✏️"
-                                        onClick={() => handleEdit(student.id)}
-                                        variant="primary"
-                                        iconPosition="start"
-                                        transparentBackground={true}
-                                        size="small"
-                                        hoverText="تعديل"
-
-                                    />
-                                    <Button
-                                        name=""
-                                        signal="🗑️"
-                                        onClick={() => handleDelete(student.id)}
-                                        size="small"
-                                        variant="danger"
-                                        transparentBackground={true}
-                                        hoverText="حذف"
-                                    />
+                                    <div
+                                        className="absolute inset-0 rounded-full shadow-inner"
+                                        aria-hidden="true"
+                                    ></div>
                                 </div>
-                            </td>
-                        </tr>
+                                <div>
+                                    <p className="font-semibold">{student.name}</p>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                                        {student.students.category?.name || 'not categoried'}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td className="px-4 py-3 text-sm">
+                            {student.email}
+                        </td>
+
+                        <td className="px-4 py-3 text-sm">
+                            ammar
+                        </td>
+
+                        <td className="px-4 py-3 text-sm">
+                            lolo
+                        </td>
+
+                        <td className="px-4 py-3 text-sm">
+                            <div className="flex items-center space-x-4 text-sm">
+                                {actions.map((a => (
+                                    <button
+                                        key={a.id}
+                                        className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray cursor-pointer"
+                                        aria-label={a.label}
+                                        onClick={() => handleDelete(student.id)}
+                                    >
+                                        <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d={a.d} fillRule="evenodd" clipRule="evenodd"></path>
+                                        </svg>
+                                    </button>
+                                )))}
+                            </div>
+                        </td>
+                    </tr>
+                        //         <div className="flex justify-center gap-2">
+                        //             <Button name="" signal="👁️"
+                        //                 onClick={() => handelDetalis(student.id)}
+                        //                 variant="info"
+                        //                 iconPosition="start"
+                        //                 size="small"
+                        //                 transparentBackground={true}
+                        //                 hoverText="عرض التفاصيل"
+                        //             />
+                        //             <Button name="" signal="✏️"
+                        //                 onClick={() => handleEdit(student.id)}
+                        //                 variant="primary"
+                        //                 iconPosition="start"
+                        //                 transparentBackground={true}
+                        //                 size="small"
+                        //                 hoverText="تعديل"
+
+                        //             />
+                        //         </div>
+                        //     </td>
+                        // </tr>
                     )}
                 />
             )}
-            <Pagination
+            {/* <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
-            />
+            /> */}
 
-            <DeleteConfirmationModal
-                isOpen={deleteModalOpen}
-                onClose={() => setDeleteModalOpen(false)}
-                onConfirm={confirmDelete}
-
-            />
+            {/* 
             <ShowDetalisModel
                 isOpen={ShowDetalisModalOpen}
                 onClose={() => setShowDetalisModalOpen(false)}
                 fields={showDetalisStudent}
-            />
+            /> */}
         </div>
     );
 };
-export default EmployeeTable;
+export default StudentTable;
