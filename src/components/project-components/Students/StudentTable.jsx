@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { deleteStudent, fetchStudents, showStudetnt } from "../../../Api/studentApi";
+import { deleteStudent, fetchStudents, showStudetnt } from "../../../api/studentApi";
 import Pagination from "../../ui-components/Pagination";
 import Spinner from "../../ui-components/Spinner";
 import Button from "../../ui-components/Button";
 import ShowDetalisModel from "../../ui-components/ShowDetalisModel";
 import CustomTable from "../../ui-components/CustomTable";
-import { actions } from "../../../store/Data";
+import { actions, studentColumns } from "../../../store/Data";
 import DeleteModal from "../../ui-components/DeleteModal";
 
 const StudentTable = () => {
@@ -87,9 +87,8 @@ const StudentTable = () => {
             {showDeleteModal && <DeleteModal
                 onClose={() => setShowDeleteModal(false)} 
                 onClick={confirmDelete}
-                title="Delete Student"
-                message="do you confirm to delete 'name' student"
-                
+                title={authLang[langs[lang]].deleteStudent}
+                message={authLang[langs[lang]].targetNameDel('"name"',authLang[langs[lang]].Student)}
                 />}
             {error && (
                 <div className="text-center text-red-600 font-bold py-4">
@@ -100,7 +99,7 @@ const StudentTable = () => {
                 <Spinner />
             ) : (
                 <CustomTable
-                    columns={[ "name","uni_number","father_name","mother_name","Operation"]}
+                    columns={studentColumns}
                     data={students}
                     renderRow={(student) => (
                         <tr className="text-gray-700 dark:text-gray-400" key={student.id}>

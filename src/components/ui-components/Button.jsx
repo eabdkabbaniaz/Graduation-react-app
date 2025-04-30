@@ -5,7 +5,6 @@ export default function Button({
   className = "",
   onClick = () => { },
   type = "button",
-  iconPosition = "end",
   variant = "default",
   transparentBackground = false,
   iconSize = "text-xl",
@@ -16,7 +15,8 @@ export default function Button({
   hoverText = "",
   borderRadius = "rounded-lg",
   marginTop = "mt-0",
-  parentStyle
+  parentStyle,
+  lang
 }) {
 
   const [isHovered, setIsHovered] = useState(false);
@@ -52,9 +52,8 @@ export default function Button({
         borderColor: transparentBackground ? 'transparent' : borderColor,
       }}
     >
-      {iconPosition === "start" && <span className={`${iconSize} mr-2`}>{signal}</span>}
       {name}
-      {iconPosition === "end" && <span className={`${iconSize} ml-2`}>{signal}</span>}
+      <span className={`${iconSize} ml-2 ${lang === "ar" ?  "mr-2" : ""}`}>{signal}</span>
       {isHovered && hoverText && (
         <span className="absolute bg-gray-700 text-white text-xs rounded-lg p-1 mt-2">
           {hoverText}

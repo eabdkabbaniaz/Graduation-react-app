@@ -2,7 +2,6 @@ import CTA from "../home/CTA"
 
 export default function MainContent(props) {
 
-    console.log(props)
     return (
         <main className="h-full overflow-y-auto">
             <div className="container px-6 mx-auto grid">

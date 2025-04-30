@@ -1,25 +1,28 @@
-import { useState } from "react";
-import { accounts, actions } from "../../../store/Data";
+import { useContext, useState } from "react";
+import { accounts, actions, universityColumns } from "../../../store/Data";
 import CustomTable from "../../ui-components/CustomTable";
 import DeleteModal from "../../ui-components/DeleteModal";
+import LangContext from "../../../context/LangContext";
+import { authLang } from "../../../lang/authLang";
+import { langs } from "../../../lang/langs";
 
 export default function UniversityTable() {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const {lang, setLang} = useContext(LangContext);
 
     return (
         <>
             {showDeleteModal && <DeleteModal
                 onClose={() => setShowDeleteModal(false)} 
-                title="Delete University"
-                message="do you confirm to delete 'name' university"
-                
+                title={authLang[langs[lang]].deleteUniversity}
+                message={authLang[langs[lang]].targetNameDel('"name"',authLang[langs[lang]].University)}
                 />}
             <CustomTable
-                columns={["Universities", "Status", "Register Date", "Operation"]}
+                columns={universityColumns}
                 data={accounts}
                 renderRow={(account) => (
-                    <tr className="text-gray-700 dark:text-gray-400" key={account.id}>
+                    <tr dir={lang === "ar" ? "rtl" : ""} className="text-gray-700 dark:text-gray-400" key={account.id}>
                         <td className="px-4 py-3">
                             <div className="flex items-center text-sm">
                                 {/* <!-- Avatar with inset shadow --> */}
@@ -35,7 +38,7 @@ export default function UniversityTable() {
                                         aria-hidden="true"
                                     ></div>
                                 </div>
-                                <div>
+                                <div className="mr-4">
                                     <p className="font-semibold">{account.name}</p>
                                     <p className="text-xs text-gray-600 dark:text-gray-400">
                                         {account.location}

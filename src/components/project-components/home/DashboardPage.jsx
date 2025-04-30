@@ -3,8 +3,15 @@ import CustomCharts from "../../ui-components/CustomCharts";
 import { cards } from "../../../store/Data";
 import MainContent from "../layout/MainContent";
 import UniversityTable from "../Universities/UniversityTable";
+import { useContext } from "react";
+import LangContext from "../../../context/LangContext";
+import { authLang } from "../../../lang/authLang";
+import { langs } from "../../../lang/langs";
 
 export default function DashboardPage({ name , description }) {
+
+    const {lang , setLang} = useContext(LangContext)
+
     return (
         <MainContent name={name} description={description}>
             {/* <!-- Cards --> */}
@@ -14,7 +21,7 @@ export default function DashboardPage({ name , description }) {
                     <CustomCard
                         key={card.id}
                         icon={card.icon}
-                        name={card.name}
+                        name={authLang[langs[lang]][card.name]}
                         number={card.number}
                         className={card.className}
                     />

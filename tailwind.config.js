@@ -1,12 +1,71 @@
-module.exports = {
-    darkMode: 'class', // أو 'media' إذا كنت تريد استخدام إعدادات النظام (الذي يتبع إعدادات الجهاز)
-    content: [
-      "./index.html",
-      "./src/**/*.{js,jsx,ts,tsx}",  // تأكد من تضمين ملفات React الخاصة بك هنا
-    ],
-    theme: {
-      extend: {},
-    },
-    plugins: [],
-  };
-  
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      // colors: {
+      //   error: "#ea5455",
+      //   "my-gray": "#7f7f7f",
+      //   "my-dark-red": "#D80C10", //"#d70a0d"
+      //   "my-light-red": "#DB4444",
+      //   "my-very-light-red": "#E4C9B0",
+      //   // "my-dark-white": "#f8f7fa", // "#ebebeb",
+      //   "my-border-gray": "#dbdade",
+      //   "squares-white": "#e0e0e0",
+      //   ///////////////////////////////////////////////////////////
+      //   "my-light-purple": "#7367f0",
+      //   "my-dark-purple": "#685dd8",
+      //   "my-white": "#fcfcfc", //"#f8f7fa",
+      //   "off-white": "#f5f5f5",
+      //   "my-hover-white": "#b2afbc",
+      //   // "my-dark-mode-light-gray": "#2f3349",
+      //   // "my-dark-mode-dark-gray": "#25293c",
+      //   "my-dark-mode-border": "#434968",
+      //   "my-dark-mode-light-white": "#cfd3ec",
+      //   "my-dark-mode-dark-white": "#b6bee3",
+      //   "my-dark-mode-hover-white": "#5e6692",
+      //   "my-table-dark-mode-light-white": "#e1def5e6",
+      //   "my-table-dark-mode-dark-white": "#b6bee3",
+      //   "my-side-bar": "#242745",
+      //   "my-side-bar-text": "#e1def5e6",
+      //   "my-dark-mode-side-bar": "#161931",
+      //   "my-dark-mode-side-bar-text": "#b6bee3",
+      //   "my-dark-mode-new-hr": "#434968",
+      //   "my-light-gray": "#6f6b7d",
+      //   "my-dark-gray": "#5d596c",
+      //   "my-table-black": "#2f2b3d",
+      //   "my-icon": "#2f2b3de6",
+      //   "pagenation-light": "#a5a3ae",
+      //   "my-dark-mode-pagenation-light": "#7983bb",
+      //   //////////////////////////////////////////
+      //   "my-green": "#52ADA9",
+      //   "my-dark-green": "#479A96",
+      //   "my-very-dark-green": "#3C8683",
+      //   "my-dark-mode-light-gray": "#ABB4BD",
+      //   "my-dark-mode-dark-gray": "#2A2C36",
+      //   "my-dark-mode-very-dark-gray": "#1E1F28",
+      //   "my-dark-mode-border-gray": "",
+      //   "my-dark-mode-img-gray": "#dadada",
+      //   "my-dark-mode-pink": "#c83348", // "#B01C32", // "#EF3651", //"#B01C32", //f85362",
+      //   "my-dark-mode-dark-pink": "#B7273C", //"#B01C32", //"#cf263f", // "#9a162a" , // ,
+      //   // "my-dark-mode-dark-white": "#F6F6F6",
+      //   "logo-white": "#bababa", //"#dcdcdc",
+      //   // "logo-dark-white": "#a7a7a7",
+      //   "my-hr": "#2f2b3d1f",
+      //   "my-orange": "#ff9f43",
+      // },
+      // boxShadow: {
+      //   "my-light-mode-card-shadow": "0 3px 12px #2f2b3d24",
+      //   "my-dark-mode-card-shadow": "0 .25rem 1.25rem rgba(15,20,34,0.4)",
+      //   "my-dark-mode-input-shadow": "0 .125rem .25rem rgba(15,20,34,.4)",
+      //   "my-light-mode-second-card-shadow": "0 .25rem 1.125rem rgba(75,70,92,.3)",
+      //   "my-dark-mode-shadow": "0px 4px 4px rgba(0,0,0,.25)",
+      // },
+    }
+  },
+  darkMode: 'class',
+  plugins: [],
+}

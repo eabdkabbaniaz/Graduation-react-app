@@ -1,14 +1,19 @@
 import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import LangContext from "../../context/LangContext";
 
-export default function Element({ name, icon, icon2 }) {
+export default function Element({ name, icon, icon2, isFirstElement, route }) {
+
+  const {lang , setLang} = useContext(LangContext)
+
   return (
-    <ul className={`${name === "Dashboard" ? "mt-6" : ""}`}>
-      <NavLink to={`/${name.toLowerCase()}`}>
+    <ul className={`${isFirstElement ? "mt-6" : ""}`}>
+      <NavLink to={`/${route.toLowerCase()}`}>
         {({ isActive }) => (
           <li className="relative px-6 py-3">
             {isActive && (
               <span
-                className="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+                className={`absolute inset-y-0 ${lang === "en" ? "left-0" : "right-0"}  w-1 bg-purple-600 rounded-tr-lg rounded-br-lg`}
                 aria-hidden="true"
               ></span>
             )}
@@ -32,7 +37,7 @@ export default function Element({ name, icon, icon2 }) {
                 <path d={icon}></path>
                 {icon2 && <path d={icon2}></path>}
               </svg>
-              <span className="ml-4">{name}</span>
+              <span className="ml-4 mr-4">{name}</span>
             </div>
           </li>
         )}

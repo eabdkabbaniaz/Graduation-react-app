@@ -6,7 +6,7 @@ export default function CustomCard({icon,name,number,className}) {
                                 <path d={icon}></path>
                             </svg>
                         </div>
-                        <div>
+                        <div className="mr-4">
                             <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                                 {name}
                             </p>

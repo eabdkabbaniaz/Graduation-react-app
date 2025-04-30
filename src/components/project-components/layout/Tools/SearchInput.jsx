@@ -1,4 +1,12 @@
+import { useContext } from "react"
+import LangContext from "../../../../context/LangContext"
+import { authLang } from "../../../../lang/authLang"
+import { langs } from "../../../../lang/langs"
+
 export default function SearchInput() {
+
+  const {lang , setLang} = useContext(LangContext)
+
     return (
         <div className="flex justify-center flex-1 lg:mr-32">
             <div
@@ -21,7 +29,7 @@ export default function SearchInput() {
               <input
                 className="w-full pl-8 pr-2 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-0 rounded-md dark:placeholder-gray-500 dark:focus:shadow-outline-gray dark:focus:placeholder-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:placeholder-gray-500 focus:bg-white focus:border-purple-300 focus:outline-none focus:shadow-outline-purple form-input"
                 type="text"
-                placeholder="Search for projects"
+                placeholder={authLang[langs[lang]].Search}
                 aria-label="Search"
               />
             </div>

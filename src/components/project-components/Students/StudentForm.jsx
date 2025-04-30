@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Button from "../../ui-components/Button";
-import { createStudent } from "../../../Api/studentApi";
+import { createStudent } from "../../../api/studentApi";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
-import { fetchCategory } from "../../../Api/categories";
+import { fetchCategory } from "../../../api/categories";
 
 const StudentForm = () => {
     const [name, setName] = useState('');
