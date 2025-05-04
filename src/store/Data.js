@@ -20,6 +20,19 @@ export const navbar = [
         icon2: "M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z",
         name: "Charts"
     },
+    {
+        id: 5,
+       // icon: "M6 3v12a6 6 0 0012 0V3m-6 6h.01",
+       icon: "M9.75 3v6.379a3 3 0 01-.879 2.121L6 15h12l-2.871-3.5a3 3 0 01-.879-2.121V3m-5.25 0h6",
+        icon2: "M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z",
+        name: "Experinence"
+    },
+    {
+        id: 6,
+        icon: "M12 14l9-5-9-5-9 5 9 5zm0 0v6m0 0H8m4 0h4",
+        icon2: "M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z",
+        name: "Teacher"
+    },
 ]
 
 export const profileMenu = [
