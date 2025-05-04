@@ -7,6 +7,8 @@ import DashboardPage from './components/project-components/home/DashboardPage'
 import Charts from './components/project-components/charts/Charts'
 import Students from './components/project-components/students/Students'
 import NotFound from './components/ui-components/NotFound'
+import Experinence from './components/project-components/experinence/Experinence'
+import Teacher from './components/project-components/teacher/Teacher'
 
 function App() {
 
@@ -18,6 +20,8 @@ function App() {
         <Route path="/universities" element={<Universities name="Universities"  description="this is Universities page" />} />
         <Route path="/Charts" element={<Charts name="Charts" description="this is Charts page" />} />
         <Route path="/students" element={<Students name="Students" description="this is Students page" />} />      
+        <Route path="/experinence" element={<Experinence name="Experinence" description="this is Experinence page" />} />      
+        <Route path="/teacher" element={<Teacher name="Teacher" description="this is Teacher page" />} />      
       </Route>
       <Route path="/create_account" element={<CreateAccount />} />
       <Route path="*" element={<NotFound />} />
