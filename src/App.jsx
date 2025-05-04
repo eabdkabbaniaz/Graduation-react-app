@@ -9,28 +9,23 @@ import Students from './components/project-components/students/Students'
 import NotFound from './components/ui-components/NotFound'
 import Experinence from './components/project-components/experinence/Experinence'
 import Teacher from './components/project-components/teacher/Teacher'
-import SessionQRCode from './components/ui-components/Qr'
 
 function App() {
 
   return (
-    <div>
- <SessionQRCode></SessionQRCode>
-    </div>
     
-   
-    // <Routes>
-    //   <Route path="/" element={<MainApp />}>
-    //     <Route path="/dashboard" element={<DashboardPage name="Dashboard" description="this is home page" />} />
-    //     <Route path="/universities" element={<Universities name="Universities"  description="this is Universities page" />} />
-    //     <Route path="/Charts" element={<Charts name="Charts" description="this is Charts page" />} />
-    //     <Route path="/students" element={<Students name="Students" description="this is Students page" />} />      
-    //     <Route path="/experinence" element={<Experinence name="Experinence" description="this is Experinence page" />} />      
-    //     <Route path="/teacher" element={<Teacher name="Teacher" description="this is Teacher page" />} />      
-    //   </Route>
-    //   <Route path="/create_account" element={<CreateAccount />} />
-    //   <Route path="*" element={<NotFound />} />
-    // </Routes>
+    <Routes>
+      <Route path="/" element={<MainApp />}>
+        <Route path="/dashboard" element={<DashboardPage name="Dashboard" description="this is home page" />} />
+        <Route path="/universities" element={<Universities name="Universities"  description="this is Universities page" />} />
+        <Route path="/Charts" element={<Charts name="Charts" description="this is Charts page" />} />
+        <Route path="/students" element={<Students name="Students" description="this is Students page" />} />      
+        <Route path="/experinence" element={<Experinence name="Experinence" description="this is Experinence page" />} />      
+        <Route path="/teacher" element={<Teacher name="Teacher" description="this is Teacher page" />} />      
+      </Route>
+      <Route path="/create_account" element={<CreateAccount />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   )
 }
 export default App
