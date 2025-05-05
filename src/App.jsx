@@ -11,6 +11,8 @@ import { useContext } from 'react'
 import LangContext from './context/LangContext'
 import { authLang } from './lang/authLang'
 import { langs } from './lang/langs'
+import Experinence from './components/project-components/experinence/Experinence'
+import Teacher from './components/project-components/teacher/Teacher'
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
         <Route path="/universities" element={<Universities name={authLang[langs[lang]].Universities} description={authLang[langs[lang]].universitiesDescription} />} />
         <Route path="/students" element={<Students name={authLang[langs[lang]].Students} description={authLang[langs[lang]].studentsDescription} />} />  
         <Route path="/charts" element={<Charts name={authLang[langs[lang]].Charts} description={authLang[langs[lang]].chartsDescription} />} />    
+        <Route path="/experinences" element={<Experinence name={authLang[langs[lang]].Experinences} description={authLang[langs[lang]].experinencesDescription} />} />      
+        <Route path="/teachers" element={<Teacher name={authLang[langs[lang]].Teachers} description={authLang[langs[lang]].teachersDescription} />} />      
       </Route>
       <Route path="/create_account" element={<CreateAccount />} />
       <Route path="*" element={<NotFound />} />

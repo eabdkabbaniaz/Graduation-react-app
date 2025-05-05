@@ -1,31 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "../../ui-components/Button";
-import { createStudent } from "../../../api/studentApi";
+import { createStudent, fetchStudents } from "../../../Api/studentApi";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
-import { fetchCategory } from "../../../api/categories";
+import { useNavigate } from "react-router-dom";
 
-const StudentForm = () => {
+const StudentCreateForm = ({ setData, categories, setError, error }) => {
+    const navigate = useNavigate();
+
     const [name, setName] = useState('');
     const [universityNumber, setUniversityNumber] = useState('');
     const [categoryId, setCategoryId] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState("");
-
-    const [categories, setCategories] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const data = await fetchCategory();
-                setCategories(data);
-            } catch (err) {
-                console.log("Error fetching categories:", err);
-                setError("❌ حدث خطأ أثناء جلب الفئات");
-            }
-        };
-        fetchCategories();
-    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -36,11 +22,18 @@ const StudentForm = () => {
                 university_number: universityNumber,
                 category_id: categoryId,
             });
+
+            //// هام جدا جدا: ملاحظة(مشان حدث بيانات الصفحة وهيك بضمن الكل مايصير فين مشاكل)
+            const { students } = await fetchStudents();
+            setData(students);
+            //// هام جدا جدا 
+
             setName('');
             setUniversityNumber('');
             setCategoryId('');
-
             setIsModalOpen(false);
+            navigate("/students");
+
         } catch (err) {
             setError("❌ حدث خطأ أثناء الإرسال");
         } finally {
@@ -49,28 +42,43 @@ const StudentForm = () => {
     };
 
     const formFields = [
-        { label: "الاسم", value: name, onChange: (e) => setName(e.target.value), required: true },
-        { label: "الرقم الجامعي", value: universityNumber, onChange: (e) => setUniversityNumber(e.target.value), required: true },
         {
-            label: "الفئة",
+            label: "name",
+            value: name,
+            onChange: (e) => setName(e.target.value),
+            required: true,
+        },
+        {
+            label: "uni_number",
+            value: universityNumber,
+            onChange: (e) => setUniversityNumber(e.target.value),
+            required: true,
+        },
+        {
+            label: "category",
             value: categoryId,
             onChange: (e) => setCategoryId(e.target.value),
             required: true,
             type: "select",
             options: [
-                { label: "اختر فئة", value: "" },
+                { label: "select category ", value: "" },
                 ...categories.map(category => ({ label: category.name, value: category.id }))
-            ]
+            ],
         }
     ];
 
     return (
         <div className="flex justify-end">
-            <div className="fixed bottom-4 right-6  mt-4">
+            <div className="fixed bottom-4 right-6 mt-4">
                 <Button
                     name="Add student"
                     signal="+"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        setName('');
+                        setUniversityNumber('');
+                        setCategoryId('');
+                        setIsModalOpen(true);
+                    }}
                 />
             </div>
 
@@ -80,12 +88,13 @@ const StudentForm = () => {
                 handleSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
                 error={error}
-                modalTitle="إضافة طالب"
+                modalTitle="Add student"
                 formFields={formFields}
-                submitButtonText={isSubmitting ? "جاري الإضافة..." : "إضافة الطالب"}
+                submitButtonText={isSubmitting ? "Add ..." : "Add student"}
                 submitButtonVariant="primary"
             />
         </div>
     );
 };
-export default StudentForm;
+
+export default StudentCreateForm;

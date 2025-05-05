@@ -1,6 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import Button from './Button';
+
 const CreateAcountModalDynmic = ({
     isOpen,
     onClose,
@@ -15,8 +16,7 @@ const CreateAcountModalDynmic = ({
 }) => {
     return (
         <Transition appear show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={onClose}>
-
+            <Dialog as="div" className="relative z-50" dir="ltr" onClose={onClose}>
                 <div className="fixed inset-0 bg-gray-500 bg-opacity-50" aria-hidden="true" />
 
                 <div className="fixed inset-0 overflow-y-auto flex items-center justify-center p-4">
@@ -29,8 +29,8 @@ const CreateAcountModalDynmic = ({
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-right align-middle shadow-xl transition-all">
-                            <Dialog.Title className="text-lg font-bold text-gray-900 text-center mb-4">
+                        <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 p-6 align-middle shadow-xl transition-all">
+                            <Dialog.Title className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-4">
                                 {modalTitle}
                             </Dialog.Title>
 
@@ -38,17 +38,17 @@ const CreateAcountModalDynmic = ({
                             {successMessage && <p className="text-green-500 text-center">{successMessage}</p>}
 
                             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-
                                 {formFields.map((field, index) => (
                                     <div key={index}>
-                                        <label className="block text-sm font-medium text-gray-700">{field.label}</label>
-
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                                            {field.label}
+                                        </label>
 
                                         {field.type === "select" ? (
                                             <select
                                                 value={field.value}
                                                 onChange={field.onChange}
-                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
                                                 required={field.required || false}
                                             >
                                                 {field.options.map((option, i) => (
@@ -57,20 +57,29 @@ const CreateAcountModalDynmic = ({
                                                     </option>
                                                 ))}
                                             </select>
+                                        ) : field.type === "textarea" ? (
+                                            <textarea
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
+                                                required={field.required || false}
+                                                rows={field.rows || 4}
+                                                placeholder={field.placeholder || ""}
+                                            />
                                         ) : (
                                             <input
                                                 type={field.type || "text"}
                                                 value={field.value}
                                                 onChange={field.onChange}
-                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
                                                 required={field.required || false}
+                                                placeholder={field.placeholder || ""}
                                             />
                                         )}
                                     </div>
                                 ))}
 
                                 <div className="flex justify-center gap-4 pt-2">
-
                                     <Button
                                         type="submit"
                                         name={submitButtonText || (isSubmitting ? "جاري الإضافة..." : "إضافة")}
@@ -80,7 +89,7 @@ const CreateAcountModalDynmic = ({
                                     />
                                     <Button
                                         type="button"
-                                        name="إغلاق"
+                                        name="cancel"
                                         variant="danger"
                                         size="normal"
                                         onClick={onClose}
@@ -94,6 +103,5 @@ const CreateAcountModalDynmic = ({
         </Transition>
     );
 };
+
 export default CreateAcountModalDynmic;
-
-

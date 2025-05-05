@@ -8,7 +8,7 @@ export default function Element({ name, icon, icon2, isFirstElement, route }) {
 
   return (
     <ul className={`${isFirstElement ? "mt-6" : ""}`}>
-      <NavLink to={`/${route.toLowerCase()}`}>
+      <NavLink to={`/${route !== undefined ? route.toLowerCase() : ""}`}>
         {({ isActive }) => (
           <li className="relative px-6 py-3">
             {isActive && (
