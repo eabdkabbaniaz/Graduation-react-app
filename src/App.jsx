@@ -10,6 +10,8 @@ import NotFound from './components/ui-components/NotFound'
 import Experinence from './components/project-components/experinence/Experinence'
 import Teacher from './components/project-components/teacher/Teacher'
 
+// hello 
+
 function App() {
 
   return (
