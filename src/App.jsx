@@ -13,6 +13,9 @@ import { authLang } from './lang/authLang'
 import { langs } from './lang/langs'
 import Experinence from './components/project-components/experinence/Experinence'
 import Teacher from './components/project-components/teacher/Teacher'
+import Questions from './components/project-components/questions/Questions'
+import Sessions from './components/project-components/sessions/Sessions'
+import Exams from './components/project-components/exams/Exams'
 
 function App() {
 
@@ -27,9 +30,13 @@ function App() {
         <Route path="/students" element={<Students name={authLang[langs[lang]].Students} description={authLang[langs[lang]].studentsDescription} />} />  
         <Route path="/charts" element={<Charts name={authLang[langs[lang]].Charts} description={authLang[langs[lang]].chartsDescription} />} />    
         <Route path="/experinences" element={<Experinence name={authLang[langs[lang]].Experinences} description={authLang[langs[lang]].experinencesDescription} />} />      
-        <Route path="/teachers" element={<Teacher name={authLang[langs[lang]].Teachers} description={authLang[langs[lang]].teachersDescription} />} />      
+        <Route path="/teachers" element={<Teacher name={authLang[langs[lang]].Teachers} description={authLang[langs[lang]].teachersDescription} />} />
+        <Route path="/exams" element={<Exams name={authLang[langs[lang]].Exams} description={authLang[langs[lang]].examsDescription} />} />  
+        <Route path="/sessions" element={<Sessions name={authLang[langs[lang]].Sessions} description={authLang[langs[lang]].sessionsDescription} />} />            
+          
       </Route>
       <Route path="/create_account" element={<CreateAccount />} />
+      <Route path="/questions" element={<Questions />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

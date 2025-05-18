@@ -1,11 +1,10 @@
 import axiosInstance from "./axiosInstance";
 
-export const fetchTeacher = async () => {
+export const getSession = async () => {
     try {
-        const response = await axiosInstance.get(`/teacher/index`);
+        const response = await axiosInstance.get(`/session/index/1`);
         //console.log("response ", response.data);
         const data = response.data.data;
-        console.log("data rr4", data)
         return data;
     } catch (error) {
         console.error("Error fetching teacher:", error);
@@ -13,8 +12,8 @@ export const fetchTeacher = async () => {
     }
 };
 
-export const deleteTeacher = async (teacherId) => {
-    return await axiosInstance.delete(`/teacher/destroy/${teacherId}`);
+export const deleteSession = async (id) => {
+    return await axiosInstance.delete(`/session/destroy/${id}`);
 };
 
 export const createTeacher = async ({ name, email }) => {
@@ -33,12 +32,12 @@ export const createTeacher = async ({ name, email }) => {
 
 
 
-export const updateTeacher = async (id, data) => {
+export const editSession = async (id, data) => {
     try {
-        const response = await axiosInstance.patch(`/teacher/update/${id}`, data);
+        const response = await axiosInstance.put(`/session/update/${id}`, data);
         return response.data;
     } catch (error) {
-        console.error("فشل في تحديث بيانات المعيد:", error);
+        console.error("فشل في تحديث بيانات الجلسة:", error);
         throw error;
     }
 };

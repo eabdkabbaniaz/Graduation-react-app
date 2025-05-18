@@ -3,16 +3,21 @@ import Spinner from "../../ui-components/Spinner";
 import { actions } from "../../../store/Data";
 import DeleteModal from "../../ui-components/DeleteModal";
 import { deleteTeacher, fetchTeacher, toggleTeacherStatus } from "../../../api/teacher";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { authLang } from "../../../lang/authLang";
+import { langs } from "../../../lang/langs";
+import LangContext from "../../../context/LangContext";
 
 const TeacherTable = ({ teachers, setTeacher, isWaiting, error, onEdit }) => {
+
+    const {lang , setLang} = useContext(LangContext);
+    
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [teacherId, setTeacherId] = useState(null);
     const handleDelete = (teacher_id) => {
         setTeacherId(teacher_id);
         setShowDeleteModal(true)
     }
-
 
     const toggleStatus = async (id) => {
         try {
@@ -45,7 +50,6 @@ const TeacherTable = ({ teachers, setTeacher, isWaiting, error, onEdit }) => {
                 onClick={confirmDelete}
                 title="Delete teacher"
                 message="do you confirm to delete teacher"
-
             />}
 
             {error && (
@@ -88,18 +92,15 @@ const TeacherTable = ({ teachers, setTeacher, isWaiting, error, onEdit }) => {
 
 
                             <td className="px-4 py-3 text-sm">
-                                <button
-                                    onClick={() => toggleStatus(teacher.id)}
-                                    className={`px-3 py-1 rounded-full text-xs font-semibold 
-                               ${teacher?.teacher?.is_active === 0
-                                            ? "bg-gray-200 text-gray-800"
-                                            : "bg-green-200 text-green-800"
-                                        }`}
-                                >
-                                    {teacher?.teacher?.is_active === 0 ? "Inactive" : "Active"}
+                                <button onClick={() => toggleStatus(teacher.id)}>
+                                    <span className={`px-2 py-1 text-[12px] font-semibold leading-tight rounded-full 
+                                                ${teacher.status === 0 ? "text-red-700 bg-red-100 dark:bg-red-700 dark:text-red-100" :
+                                            "text-green-700 bg-green-100 dark:bg-green-700 dark:text-green-100"}
+                                        `}>
+                                        {teacher.status === 0 ? authLang[langs[lang]].Inactive : authLang[langs[lang]].Active}
+                                    </span>
                                 </button>
                             </td>
-
 
 
                             <td className="px-4 py-3 text-sm">

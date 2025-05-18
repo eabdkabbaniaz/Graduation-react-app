@@ -22,8 +22,7 @@ export const navbar = [
     },
     {
         id: 5,
-       // icon: "M6 3v12a6 6 0 0012 0V3m-6 6h.01",
-       icon: "M9.75 3v6.379a3 3 0 01-.879 2.121L6 15h12l-2.871-3.5a3 3 0 01-.879-2.121V3m-5.25 0h6",
+        icon: "M9.75 3v6.379a3 3 0 01-.879 2.121L6 15h12l-2.871-3.5a3 3 0 01-.879-2.121V3m-5.25 0h6",
         icon2: "M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z",
         name: "Experinences"
     },
@@ -32,6 +31,16 @@ export const navbar = [
         icon: "M12 14l9-5-9-5-9 5 9 5zm0 0v6m0 0H8m4 0h4",
         icon2: "M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z",
         name: "Teachers"
+    },
+    {
+        id: 7,
+        icon: "M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25",
+        name: "Exams"
+    },
+    {
+        id: 8,
+        icon: "M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z",
+        name: "Sessions"
     },
 ]
 
@@ -133,3 +142,5 @@ export const languageList = [
 export const universityColumns = ["Universities","Status","Register_Date","Operation"];
 export const studentColumns = ["name","uni_number","father_name","mother_name","Operation"];
 export const experinenceColumns = ["name", "before_instruction", "after_instruction", "status", "Operation"];
+export const sessionColumns = ["session_name","Experinence","drugs","Operation"];
+export const examColumns = ["Exams","Status","Subject","duration","Operation"];

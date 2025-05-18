@@ -13,6 +13,7 @@ const CreateAcountModalDynmic = ({
     formFields,
     submitButtonText,
     submitButtonVariant,
+    size
 }) => {
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -29,7 +30,7 @@ const CreateAcountModalDynmic = ({
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 p-6 align-middle shadow-xl transition-all">
+                        <Dialog.Panel className={`w-full ${size} ${size ? "" : "overflow-hidden"} max-w-md transform rounded-2xl bg-white dark:bg-gray-900 p-6 align-middle shadow-xl transition-all`}>
                             <Dialog.Title className="text-lg font-bold text-gray-900 dark:text-gray-100 text-center mb-4">
                                 {modalTitle}
                             </Dialog.Title>
@@ -66,7 +67,29 @@ const CreateAcountModalDynmic = ({
                                                 rows={field.rows || 4}
                                                 placeholder={field.placeholder || ""}
                                             />
-                                        ) : (
+                                        ) :
+                                        field.type === "checkbox-group" ? (
+                                            <div className="mt-2">
+                                              <p className="text-sm text-gray-700 dark:text-gray-200 mb-1">
+                                                {field.label}
+                                              </p>
+                                              <div className="flex flex-col gap-2">
+                                                {field.options.map((option, i) => (
+                                                  <label key={i} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
+                                                    <input
+                                                      type="checkbox"
+                                                      value={option.value}
+                                                      checked={field.value.includes(option.value)}
+                                                      onChange={() => field.onChange(option.value)}
+                                                      className="text-blue-600"
+                                                    />
+                                                    {option.label}
+                                                  </label>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )  
+                                        :(
                                             <input
                                                 type={field.type || "text"}
                                                 value={field.value}
@@ -74,6 +97,7 @@ const CreateAcountModalDynmic = ({
                                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
                                                 required={field.required || false}
                                                 placeholder={field.placeholder || ""}
+                                                {...field}
                                             />
                                         )}
                                     </div>

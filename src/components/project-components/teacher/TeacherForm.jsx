@@ -11,7 +11,6 @@ const TeacherForm = ({ teacher, setData }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-
     useEffect(() => {
         if (teacher) {
             setName(teacher.name);

@@ -44,6 +44,16 @@ export const authLang = {
     Active: "نشط",
     Inactive: "غير نشط",
     Add: "إضافة",
+    Exams:"الاختبارات",
+    examsDescription:"هذه صفحة الاختبارات",
+    Sessions: "الجلسات",
+    sessionsDescription: "هذه صفحة الجلسات",
+    session_name: "اسم الجلسة",
+    drugs:"الأدوية",
+    duration: "الفترة",
+    Subject: "المادة",
+
+
 
 
 
@@ -85,7 +95,7 @@ export const authLang = {
     invalidFileType: "يرجى إدخال صور صالحة.",
     noChanges: "لا توجد تغييرات في القيم.",
     invalidFormat: "يرجى إدخال بريد إلكتروني أو رقم هاتف صحيح.",
-    email: "يرجى إدخال عنوان بريد إلكتروني صالح.",
+    email: "البريد إلكتروني",
     smLength: (min) => `يجب ألا يقل الإدخال عن ${min} حرفًا.`,
     exactLengthPhone: "يجب أن يكون الإدخال بالضبط 10 أرقام.",
     lgLength: "يتجاوز الإدخال الطول المسموح به بحد أقصى 50 حرفًا.",
@@ -136,6 +146,14 @@ export const authLang = {
     Active: "Active",
     Inactive: "Inactive",
     Add: "Add",
+    Exams:"Exams",
+    examsDescription:"this is exams page",
+    Sessions: "Sessions",
+    sessionsDescription: "this is sessions page",
+    session_name: "session name",
+    drugs:"drugs",
+    duration: "duration",
+    Subject: "Subject",
 
 
     
@@ -177,7 +195,7 @@ export const authLang = {
     invalidFileType: "Please enter valid images.",
     noChanges: "No changes were made.",
     invalidFormat: "Please enter a valid email or phone number.",
-    email: "Please enter a valid email address.",
+    email: "email",
     smLength: (min) => `The input must be at least ${min} characters long.`,
     exactLengthPhone: "The input must be exactly 10 digits.",
     lgLength: "The input exceeds the maximum allowed length of 50 characters.",

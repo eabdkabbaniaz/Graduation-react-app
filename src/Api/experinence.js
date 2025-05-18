@@ -3,9 +3,7 @@ import axiosInstance from "./axiosInstance";
 export const fetchExperinence = async () => {
     try {
         const response = await axiosInstance.get(`/Experinence/index`);
-        console.log("response ", response.data.data);
         const data = response.data.data;
-        console.log("data", data)
         return data;
     } catch (error) {
         console.error("Error fetching experinence:", error);

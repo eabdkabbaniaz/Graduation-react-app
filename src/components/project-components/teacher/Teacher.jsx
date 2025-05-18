@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MainContent from "../layout/MainContent";
 import TeacherForm from "./TeacherForm";
-import TeacherTable from "./teacherTable";
+import TeacherTable from "./TeacherTable";
 import { fetchTeacher } from "../../../api/teacher";
 const Teacher = ({ name, description }) => {
     const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -9,6 +9,7 @@ const Teacher = ({ name, description }) => {
     const [teachers, setTeacher] = useState([]);
     const [error, setError] = useState(null);
     const [isWaiting, setIsWaiting] = useState(false);
+
     useEffect(() => {
         const getData = async () => {
             try {
@@ -23,6 +24,7 @@ const Teacher = ({ name, description }) => {
         };
         getData();
     }, []);
+    
     return (
         <MainContent name={name} description={description}>
             <TeacherTable
