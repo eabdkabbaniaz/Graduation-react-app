@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { deleteStudent } from "../../../api/studentApi";
+import React, { useState } from "react";
+import { deleteStudent, importStudents } from "../../../api/studentApi";
 import Spinner from "../../ui-components/Spinner";
 // import ShowDetalisModel from "../../ui-components/ShowDetalisModel";
 import CustomTable from "../../ui-components/CustomTable";
@@ -7,19 +7,30 @@ import { actions, studentColumns } from "../../../store/Data";
 import DeleteModal from "../../ui-components/DeleteModal";
 import CategoryFilter from "../../ui-components/CategoryFilter";
 import { fetchStudetnByCategory } from "../../../api/category";
+import Button from "../../ui-components/Button";
+import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
+import Pagination from "../../ui-components/Pagination";
 
-const StudentTable = ({ setStudents, students, error, isWaiting, categories, onEdit, originalStudents, setIsEditModalOpen }) => {
-    const [selectedCategoryId, setSelectedCategoryId] = useState("");
+const StudentTable = ({ setStudents, students, error, isWaiting, categories, onEdit, originalStudents, setIsEditModalOpen, page, setPage, lastPage, isSubmitting, setIsSubmitting }) => {
+    const [selectedCategoryId, setSelectedCategoryId] = useState();
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [studentId, setStudentId] = useState(null);
+    const [studentName, setStudentName] = useState("");
+    const [showAll, setShowAll] = useState("عرض الكل");
+    const [showModal, setShowModal] = useState(false);
+
+    const [numberOfCategories, setNumberOfCategories] = useState(1);
+    const [file, setFile] = useState(null);
+    const [distributionMethod, setDistributionMethod] = useState("simple");
 
     const handleFilter = async (categoryId) => {
-        if (!categoryId) {
+        if (!categoryId || categoryId === "عرض الكل") {
             setStudents(originalStudents);
             setSelectedCategoryName("");
-            setSelectedCategoryId("");
+            setSelectedCategoryId("عرض الكل");
             return;
         }
-
         try {
             const data = await fetchStudetnByCategory(categoryId);
             setStudents(data.students);
@@ -31,16 +42,11 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
         }
     };
 
-
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [studentId, setStudentId] = useState(null);
-
     const confirmDelete = () => {
         if (studentId) {
             deleteStudent(studentId)
                 .then(() => {
                     setStudents(prev => prev.filter(s => s.id !== studentId));
-                    setTimeout(() => { }, 3000);
                     setShowDeleteModal(false);
                 })
                 .catch(err => {
@@ -49,24 +55,95 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
         }
     };
 
-    const handleDelete = (student_id) => {
-        setStudentId(student_id);
+    const handleDelete = (id , name) => {
+        setStudentId(id);
+        setStudentName(name)
         setShowDeleteModal(true)
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formdata = new FormData();
+        formdata.append("category_number", numberOfCategories);
+        formdata.append("file", file);
+        formdata.append("distributionMethod", distributionMethod);   
+
+        setIsSubmitting(true);
+
+        try {
+            await importStudents(formdata);
+
+            setNumberOfCategories(0);
+            setFile("");
+            setDistributionMethod("");
+            setShowModal(false);
+
+        } catch (err) {
+            console.error("❌ حدث خطأ أثناء الإرسال");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const formFields = [
+        {
+            label: "number of categories",
+            value: numberOfCategories,
+            onChange: (e) => setNumberOfCategories(e.target.value),
+            required: true,
+            type: "number",
+            min:"1",
+        },
+        {
+            label: "file",
+            onChange: (e) => {
+                const selectedFile = e.target.files[0];
+                setFile(selectedFile);
+            },
+            required: true,
+            type: "file",
+        },
+        {
+            label: "distribution method",
+            value: distributionMethod,
+            onChange: (e) => setDistributionMethod(e.target.value),
+            required: true,
+            type: "select",
+            options: [{ label: "simple", value: "simple" },{ label: "random", value: "random" }],
+        }
+    ];
 
     return (
         <div className="p-4">
+
+            <div dir="rtl">
+                <Button signal="" name="import students" onClick={() => setShowModal(true)} />
+            </div>
+
+            {showModal && <CreateAcountModalDynmic
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                handleSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+                error={error}
+                modalTitle="import students"
+                formFields={formFields}
+                submitButtonText={isSubmitting ? "import ..." : "import students"}
+                submitButtonVariant="primary"
+            />}
+
             <CategoryFilter
                 categories={categories}
                 handleFilter={handleFilter}
                 selectedCategoryId={selectedCategoryId}
+                intialValue={showAll}
             />
             {showDeleteModal && <DeleteModal
                 onClose={() => setShowDeleteModal(false)}
                 onClick={confirmDelete}
                 title="Delete Student"
-                message="do you confirm to delete student"
+                message={`do you confirm to delete student ${studentName}`}
 
             />}
             {error && (
@@ -126,7 +203,7 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
                                             aria-label={a.label}
                                             onClick={() => {
                                                 if (a.label === "Delete") {
-                                                    handleDelete(student.id);
+                                                    handleDelete(student.id,student.name);
                                                 } else if (a.label === "Edit") {
                                                     onEdit(student);
                                                     setIsEditModalOpen(true);
@@ -144,6 +221,7 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
                     )}
                 />
             )}
+            <Pagination currentPage={page} totalPages={lastPage} onPageChange={(p) => setPage(p)} />
         </div>
     );
 };

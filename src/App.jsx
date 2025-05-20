@@ -7,7 +7,7 @@ import DashboardPage from './components/project-components/home/DashboardPage'
 import Charts from './components/project-components/charts/Charts'
 import Students from './components/project-components/students/Students'
 import NotFound from './components/ui-components/NotFound'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import LangContext from './context/LangContext'
 import { authLang } from './lang/authLang'
 import { langs } from './lang/langs'
@@ -16,10 +16,14 @@ import Teacher from './components/project-components/teacher/Teacher'
 import Questions from './components/project-components/questions/Questions'
 import Sessions from './components/project-components/sessions/Sessions'
 import Exams from './components/project-components/exams/Exams'
+import Subjects from './components/project-components/subjects/Subjects'
+import SessionQRCode from './components/ui-components/SessionQRCode'
 
 function App() {
 
   const {lang , setLang} = useContext(LangContext)
+  const [sessionNameQR , setSessionNameQR] = useState("");
+  const [code , setCode] = useState("");
 
   return (
     
@@ -32,11 +36,12 @@ function App() {
         <Route path="/experinences" element={<Experinence name={authLang[langs[lang]].Experinences} description={authLang[langs[lang]].experinencesDescription} />} />      
         <Route path="/teachers" element={<Teacher name={authLang[langs[lang]].Teachers} description={authLang[langs[lang]].teachersDescription} />} />
         <Route path="/exams" element={<Exams name={authLang[langs[lang]].Exams} description={authLang[langs[lang]].examsDescription} />} />  
-        <Route path="/sessions" element={<Sessions name={authLang[langs[lang]].Sessions} description={authLang[langs[lang]].sessionsDescription} />} />            
-          
+        <Route path="/sessions" element={<Sessions name={authLang[langs[lang]].Sessions} description={authLang[langs[lang]].sessionsDescription} setSessionNameQR={setSessionNameQR} setCode={setCode} />} />            
+        <Route path="/subjects" element={<Subjects name={authLang[langs[lang]].Subjects} description={authLang[langs[lang]].subjectsDescription} />} />            
       </Route>
       <Route path="/create_account" element={<CreateAccount />} />
       <Route path="/questions" element={<Questions />} />
+      <Route path="/qr" element={<SessionQRCode sessionName={sessionNameQR} code={code} />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

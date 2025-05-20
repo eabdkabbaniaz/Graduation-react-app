@@ -6,7 +6,6 @@ import { fetchStudents } from "../../../Api/studentApi";
 import { fetchCategory } from "../../../api/categories";
 import { useEffect, useState } from "react";
 
-
 const Students = ({ name, description }) => {
 
   const [students, setStudents] = useState([]);
@@ -14,16 +13,21 @@ const Students = ({ name, description }) => {
   const [error, setError] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [categories, setCategories] = useState([]);
   const [originalStudents, setOriginalStudents] = useState([]);
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+
   useEffect(() => {
     const getData = async () => {
       try {
         setIsWaiting(true);
-        const { students, last_page } = await fetchStudents();
+        const { students, last_page } = await fetchStudents(page);
         setStudents(students);
         setOriginalStudents(students);
+        setLastPage(last_page)
 
         const data = await fetchCategory();
         setCategories(data);
@@ -34,7 +38,7 @@ const Students = ({ name, description }) => {
       }
     };
     getData();
-  }, []);
+  }, [page,isSubmitting === false]);
   return (
     <MainContent name={name} description={description}>
       <StudentTable
@@ -46,6 +50,11 @@ const Students = ({ name, description }) => {
         onEdit={setSelectedStudent}
         originalStudents={originalStudents}
         setIsEditModalOpen={setIsEditModalOpen}
+        page={page}
+        lastPage={lastPage}
+        setPage={setPage}
+        isSubmitting={isSubmitting}
+        setIsSubmitting={setIsSubmitting}
       />
 
       <StudentCreateForm
@@ -55,13 +64,14 @@ const Students = ({ name, description }) => {
         error={error}
       />
 
-
       {isEditModalOpen && (
         <StudentEditForm
           student={selectedStudent}
           setData={setStudents}
           setError={setError}
           error={error}
+          isEditModalOpen={isEditModalOpen}
+          setIsEditModalOpen={setIsEditModalOpen}
         />
       )}
 

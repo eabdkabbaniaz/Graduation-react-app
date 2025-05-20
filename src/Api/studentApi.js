@@ -5,9 +5,11 @@ export const fetchStudents = async (page = 1) => {
   try {
     const response = await axiosInstance.get(`/studentAdmin/index?page=${page}`);
     const { data, last_page } = response.data.data;
+    const { next_page_url } = response.data;
     return {
       students: data,
       last_page,
+      next_page_url
     };
   } catch (error) {
     console.error("Error fetching students:", error);
@@ -19,8 +21,6 @@ export const fetchStudents = async (page = 1) => {
 export const deleteStudent = async (studentId) => {
   return await axiosInstance.delete(`/studentAdmin/destroy/${studentId}`);
 };
-
-
 
 export const showStudetnt = async (studentId) => {
     try {
@@ -34,7 +34,6 @@ export const showStudetnt = async (studentId) => {
         throw error;
       }
 };
-
 
 
 export const createStudent = async ({ name, university_number, category_id }) => {
@@ -63,3 +62,12 @@ export const createStudent = async ({ name, university_number, category_id }) =>
       }
   };
   
+  export const importStudents = async (data) => {
+    try {
+        const response = await axiosInstance.post(`/studentAdmin/import-students`, data);
+        return response.data;
+    } catch (error) {
+        console.error("فشل تصدير الطلاب:", error);
+        throw error;
+    }
+};

@@ -11,13 +11,9 @@ export const fetchExperinence = async () => {
     }
 };
 
-
 export const deleteExperinence = async (experinenceId) => {
     return await axiosInstance.delete(`/Experinence/destroy/${experinenceId}`);
 };
-
-
-
 
 export const createExperinence = async ({ name, before_instruction, after_instruction }) => {
     try {
@@ -33,7 +29,6 @@ export const createExperinence = async ({ name, before_instruction, after_instru
         throw error;
     }
 };
-
 
 export const updateExperinence = async (id, data) => {
     try {

@@ -60,7 +60,6 @@ const ExperinenceTable = ({ data, onEdit, isWaiting, error
                                     </button>
                                 </td>
 
-
                                 <td className="px-4 py-3 text-sm">
                                     <div className="flex items-center space-x-4 text-sm">
                                         {actions.map((a => (

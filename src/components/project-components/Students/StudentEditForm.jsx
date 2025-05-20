@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
 import { updateStudent } from "../../../Api/studentApi";
 
-
-const StudentEditForm = ({ student, setData, setError, error }) => {
-    console.log(student?.id + "fjhdhkflsjd")
+const StudentEditForm = ({ student, setData, setError, error, isEditModalOpen, setIsEditModalOpen }) => {
     const [name, setName] = useState('');
     const [universityNumber, setUniversityNumber] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if (student) {
@@ -16,7 +13,7 @@ const StudentEditForm = ({ student, setData, setError, error }) => {
             setUniversityNumber(student.email);
         }
         setTimeout(() => {
-            setIsModalOpen(true);
+            setIsEditModalOpen(true);
         }, 200);
     }, [student]);
     const handleSubmit = async (e) => {
@@ -33,20 +30,18 @@ const StudentEditForm = ({ student, setData, setError, error }) => {
                         s.id === student.id ? { ...s, name, email: universityNumber } : s
                     )
                 );
-                setIsModalOpen(false);
+                setIsEditModalOpen(false);
             }
             setName('');
             setUniversityNumber('');
-            setIsModalOpen(false);
+            setIsEditModalOpen(false);
         } catch (err) {
             setError("❌ حدث خطأ أثناء الإرسال");
         } finally {
             setIsSubmitting(false);
-            setIsModalOpen(false);
+            setIsEditModalOpen(false);
         }
     };
-
-
 
     const formFields = [
         { label: "name", value: name, onChange: (e) => setName(e.target.value), required: true },
@@ -55,8 +50,8 @@ const StudentEditForm = ({ student, setData, setError, error }) => {
     return (
         <div>
             <CreateAcountModalDynmic
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
                 handleSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
                 error={error}

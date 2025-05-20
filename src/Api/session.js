@@ -30,8 +30,6 @@ export const createTeacher = async ({ name, email }) => {
     }
 };
 
-
-
 export const editSession = async (id, data) => {
     try {
         const response = await axiosInstance.put(`/session/update/${id}`, data);
@@ -42,12 +40,12 @@ export const editSession = async (id, data) => {
     }
 };
 
-export const toggleTeacherStatus = async (id) => {
+export const attend = async (code) => {
     try {
-        const response = await axiosInstance.get(`/teacher/toggleActivation/${id}`);
+        const response = await axiosInstance.post(`/attend`, {code});
         return response.data;
-    } catch (err) {
-        console.error("فشل تغيير الحالة", err);
-        throw err;
+    } catch (error) {
+        console.error("invalid QR", error);
+        throw error;
     }
 };

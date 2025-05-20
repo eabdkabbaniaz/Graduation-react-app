@@ -1,36 +1,34 @@
 import { useContext, useEffect, useState } from "react";
-import { actions, examColumns } from "../../../store/Data";
+import { actions, subjectColumns } from "../../../store/Data";
 import CustomTable from "../../ui-components/CustomTable";
 import DeleteModal from "../../ui-components/DeleteModal";
 import LangContext from "../../../context/LangContext";
 import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
-import { deleteExam, editExam, getExam } from "../../../api/exam";
+import { addSubject, deleteSubject, editSubject, getSubject } from "../../../api/subject";
 import Spinner from "../../ui-components/Spinner";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
 import Button from "../../ui-components/Button";
 
-export default function ExamTable() {
+export default function SubjectTable() {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [examName, setExamName] = useState();
-    const [examId, setExamId] = useState();
+    const [subjectId, setSubjectId] = useState();
+    const [subjectName, setSubjectName] = useState();
+    const [add, setAdd] = useState(false);
     const { lang, setLang } = useContext(LangContext);
-    const [exams, setExams] = useState([]);
+    const [subjects, setSubjects] = useState([]);
     const [isWaiting, setIsWaiting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [object, setObject] = useState({ id: "", name: "", drug_ids: [] });
-    const [id, setId] = useState();
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(null);
-    const [add, setAdd] = useState(false);
 
     useEffect(() => {
         const getData = async () => {
             try {
                 setIsWaiting(true);
-                const data = await getExam();
-                setExams(data);
+                const data = await getSubject();
+                setSubjects(data);
             } catch (error) {
                 setError("An error occurred while loading the data😥");
             } finally {
@@ -41,18 +39,18 @@ export default function ExamTable() {
     }, [isSubmitting === false]);
 
     const handleDelete = (id, name) => {
-        setExamName(name);
-        setExamId(id);
+        setSubjectName(name);
+        setSubjectId(id);
         setShowDeleteModal(true)
     }
 
     const confirmDelete = () => {
-        if (examId) {
-            deleteExam(examId)
+        if (subjectId) {
+            deleteSubject(subjectId)
                 .then(() => {
-                    setExams(prev => prev.filter(s => s.id !== examId));
-                    setTimeout(() => { }, 3000);
+                    setSubjects(prev => prev.filter(s => s.id !== subjectId));
                     setShowDeleteModal(false);
+                    setSubjectName("")
                 })
                 .catch(err => {
                     console.log("حدث خطأ:", err);
@@ -61,12 +59,8 @@ export default function ExamTable() {
     };
 
     const onEdit = (obj) => {
-        setId(obj.id)
-        setObject({
-            ...object,
-            name: obj.name,
-            drug_ids: obj.drug?.map((d) => d.id),
-        });
+        setSubjectId(obj.id)
+        setSubjectName(obj.name)
         setShowModal(true)
     }
 
@@ -74,13 +68,17 @@ export default function ExamTable() {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await editExam(id, object);
-            setExams(prev =>
-                prev.map(exp =>
-                    exp.id === object.id
-                        ? { ...exp, object } : exp
-                )
-            );
+            if(isAdd){
+                await addSubject({ name: subjectName });
+            }else {
+                await editSubject(subjectId, { name: subjectName });
+                setSubjects(prev =>
+                    prev.map(exp =>
+                        exp.id === subjectId
+                            ? { ...exp } : exp
+                    )
+                );
+            } 
             setShowModal(false);
         } catch (err) {
             setError(" An error occurred during submission");
@@ -91,10 +89,11 @@ export default function ExamTable() {
 
     const formFields = [
         {
-            label: "name",
-            value: object.name,
-            onChange: (e) => setObject({ ...object, name: e.target.value }),
+            label: "subject name",
+            value: subjectName,
+            onChange: (e) => setSubjectName(e.target.value),
             required: true,
+            autoFocus: true
         },
     ];
 
@@ -103,17 +102,22 @@ export default function ExamTable() {
             {showDeleteModal && <DeleteModal
                 onClose={() => setShowDeleteModal(false)}
                 onClick={confirmDelete}
-                title="Delete Exam"
-                message={`do you confirm to delete Exam ${examName}`}
+                title="Delete subject"
+                message={`do you confirm to delete subject ${subjectName}`}
             />}
 
             {showModal && <CreateAcountModalDynmic
                 isOpen={showModal}
-                onClose={() => setShowModal(false)}
-                handleSubmit={add ? (e) => handleSubmit(e,true) : handleSubmit}
+                onClose={() => {
+                    setShowModal(false)
+                    setSubjectName("")
+                    setSubjectId('');
+                    setAdd(false)
+                }}
+                handleSubmit={add ? (e) => handleSubmit(e, true) : handleSubmit}
                 isSubmitting={isSubmitting}
                 error={error}
-                modalTitle={add ? "Add Exam" :`Edit Exam`}
+                modalTitle={add ? "Add Subject" : "Edit Subject"}
                 formFields={formFields}
                 submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
                 submitButtonVariant="primary"
@@ -121,48 +125,21 @@ export default function ExamTable() {
 
             {isWaiting ? (<Spinner />) : (
                 <CustomTable
-                    columns={examColumns}
-                    data={exams}
-                    renderRow={(exam) => (
-                        <tr dir={lang === "ar" ? "rtl" : ""} className="text-gray-700 dark:text-gray-400" key={exam.id}>
+                    columns={subjectColumns}
+                    data={subjects}
+                    renderRow={(subject, index) => (
+                        <tr dir={lang === "ar" ? "rtl" : ""} className="text-gray-700 dark:text-gray-400" key={subject.id}>
+
+                            <td className="px-4 py-3 text-sm">
+                                {index + 1}
+                            </td>
+
                             <td className="px-4 py-3">
                                 <div className="flex items-center text-sm">
                                     <div className="mr-4">
-                                        <p className="font-semibold">{exam.name}</p>
-                                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                                            {exam.number_of_questions} question /
-                                            {exam.Final_grade} final grade /
-                                            {exam.time} min
-                                        </p>
+                                        <p className="font-semibold">{subject.name}</p>
                                     </div>
                                 </div>
-                            </td>
-
-                            <td className="px-4 py-3 text-xs">
-                                <span className={`px-2 py-1 text-[12px] font-semibold leading-tight rounded-full 
-                                                ${exam.status === 0 ? "text-red-700 bg-red-100 dark:bg-red-700 dark:text-red-700" :
-                                        "text-green-700 bg-green-100 dark:bg-green-700 dark:text-green-100"}
-                                        `}>
-                                    {exam.status === 0 ? authLang[langs[lang]].Inactive : authLang[langs[lang]].Active}
-                                </span>
-                            </td>
-
-                            <td className="px-4 py-3 text-sm">
-                                <select className="px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
-                                    {Array.isArray(exam.subject) && exam.subject.length > 0 ? (
-                                        exam.subject.map((drug, index) => (
-                                            <option key={index} value={drug.name}>
-                                                {drug.subject_id}
-                                            </option>
-                                        ))
-                                    ) : (
-                                        <option disabled>لا توجد أدوية</option>
-                                    )}
-                                </select>
-                            </td>
-
-                            <td className="px-4 py-3 text-sm">
-                                {exam.Start_date} to {exam.End_date}
                             </td>
 
                             <td className="px-4 py-3 text-sm">
@@ -174,8 +151,8 @@ export default function ExamTable() {
                                             aria-label={a.label}
                                             onClick={() => {
                                                 if (a.label === "Delete") {
-                                                    handleDelete(exam.id, exam.name);
-                                                } else if (a.label === "Edit") onEdit?.(exam);
+                                                    handleDelete(subject.id, subject.name);
+                                                } else if (a.label === "Edit") onEdit?.(subject);
                                             }}                                    >
                                             <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d={a.d} fillRule="evenodd" clipRule="evenodd"></path>
@@ -190,7 +167,7 @@ export default function ExamTable() {
             <div className="flex justify-end">
                 <div className="fixed bottom-4 right-6 mt-4">
                     <Button
-                        name={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Exam}
+                        name={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Subject}
                         signal="+"
                         onClick={() => {
                             setShowModal(true)

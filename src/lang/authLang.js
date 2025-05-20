@@ -45,6 +45,7 @@ export const authLang = {
     Inactive: "غير نشط",
     Add: "إضافة",
     Exams:"الاختبارات",
+    Exam:"اختبار",
     examsDescription:"هذه صفحة الاختبارات",
     Sessions: "الجلسات",
     sessionsDescription: "هذه صفحة الجلسات",
@@ -52,8 +53,9 @@ export const authLang = {
     drugs:"الأدوية",
     duration: "الفترة",
     Subject: "المادة",
-
-
+    Subjects: "المواد",
+    subjectsDescription: "هذه صفحة المواد",
+    id: "رقم",
 
 
 
@@ -147,6 +149,7 @@ export const authLang = {
     Inactive: "Inactive",
     Add: "Add",
     Exams:"Exams",
+    Exam:"Exam",
     examsDescription:"this is exams page",
     Sessions: "Sessions",
     sessionsDescription: "this is sessions page",
@@ -154,6 +157,9 @@ export const authLang = {
     drugs:"drugs",
     duration: "duration",
     Subject: "Subject",
+    Subjects: "Subjects",
+    subjectsDescription: "this is subjects page",
+    id: "id",
 
 
     

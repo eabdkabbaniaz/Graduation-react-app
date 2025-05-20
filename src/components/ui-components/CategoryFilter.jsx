@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function CategoryFilter({ categories, handleFilter, selectedCategoryId }) {
+export default function CategoryFilter({ categories, handleFilter, selectedCategoryId, intialValue}) {
   return (
     <FormControl
       variant="standard"
@@ -26,7 +26,7 @@ export default function CategoryFilter({ categories, handleFilter, selectedCateg
       <Select
         labelId="category-select-label"
         id="category-select"
-        value={selectedCategoryId}
+        value={selectedCategoryId ?? intialValue}
         onChange={(e) => handleFilter(e.target.value)}
         label="اختر الفئة"
         sx={{
@@ -42,7 +42,7 @@ export default function CategoryFilter({ categories, handleFilter, selectedCateg
           },
         }}
       >
-        <MenuItem value="">
+        <MenuItem value="عرض الكل">
           <em>عرض الكل</em>
         </MenuItem>
         {categories.map((cat) => (
