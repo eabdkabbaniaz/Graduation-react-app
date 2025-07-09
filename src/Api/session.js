@@ -16,16 +16,12 @@ export const deleteSession = async (id) => {
     return await axiosInstance.delete(`/session/destroy/${id}`);
 };
 
-export const createTeacher = async ({ name, email }) => {
+export const addSession = async (data) => {
     try {
-        const response = await axiosInstance.post(`/teacher/create`, {
-            name,
-            email,
-        });
-        console.log(response.data, "dataloehruekj");
-        return response.data.data.original.data;
+        const response = await axiosInstance.post(`/session/store`, data);
+        return response.data.data;
     } catch (error) {
-        console.error("فشل في إنشاء المعيد:", error);
+        console.error("فشل في إنشاء جلسة:", error);
         throw error;
     }
 };

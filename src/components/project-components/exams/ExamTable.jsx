@@ -5,10 +5,13 @@ import DeleteModal from "../../ui-components/DeleteModal";
 import LangContext from "../../../context/LangContext";
 import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
-import { deleteExam, editExam, getExam } from "../../../api/exam";
+import { addExam, deleteExam, editExam, getExam } from "../../../api/exam";
 import Spinner from "../../ui-components/Spinner";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
-import Button from "../../ui-components/Button";
+import { getSubject } from "../../../api/subject";
+import FlexButton from "../../ui-components/FlexButton";
+import { getExamFormFields } from "../../../formFields/examFormFields";
+import ExamRow from "./ExamRow";
 
 export default function ExamTable() {
 
@@ -19,20 +22,30 @@ export default function ExamTable() {
     const [exams, setExams] = useState([]);
     const [isWaiting, setIsWaiting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [object, setObject] = useState({ id: "", name: "", drug_ids: [] });
-    const [id, setId] = useState();
+    const [object, setObject] = useState({ 
+        name: "", 
+        number_of_questions: 0,
+        Final_grade:0, 
+        Start_date: "",
+        End_date: "",
+        subject_id: [],
+        time:0 
+    });
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(null);
     const [add, setAdd] = useState(false);
+    const [subjects, setSubjects] = useState([]);
 
     useEffect(() => {
         const getData = async () => {
             try {
                 setIsWaiting(true);
-                const data = await getExam();
-                setExams(data);
+                const dataExam = await getExam();
+                setExams(dataExam);
+                const data = await getSubject();
+                setSubjects(data);
             } catch (error) {
-                setError("An error occurred while loading the data😥");
+                setError("An error occurred while loading the data");
             } finally {
                 setIsWaiting(false);
             }
@@ -61,11 +74,16 @@ export default function ExamTable() {
     };
 
     const onEdit = (obj) => {
-        setId(obj.id)
+        setExamId(obj.id)
         setObject({
             ...object,
             name: obj.name,
-            drug_ids: obj.drug?.map((d) => d.id),
+            number_of_questions: obj.number_of_questions,
+            Final_grade: obj.Final_grade, 
+            Start_date: obj.Start_date,
+            End_date: obj.End_date,
+            subject_id: obj.subject_id?.map((d) => d.id),
+            time:obj.time    
         });
         setShowModal(true)
     }
@@ -74,13 +92,11 @@ export default function ExamTable() {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await editExam(id, object);
-            setExams(prev =>
-                prev.map(exp =>
-                    exp.id === object.id
-                        ? { ...exp, object } : exp
-                )
-            );
+            if(isAdd){
+                await addExam(object);
+            }else{
+                await editExam(examId, object);
+            }
             setShowModal(false);
         } catch (err) {
             setError(" An error occurred during submission");
@@ -89,14 +105,7 @@ export default function ExamTable() {
         }
     };
 
-    const formFields = [
-        {
-            label: "name",
-            value: object.name,
-            onChange: (e) => setObject({ ...object, name: e.target.value }),
-            required: true,
-        },
-    ];
+    const formFields = getExamFormFields(object, setObject, subjects);
 
     return (
         <>
@@ -109,14 +118,28 @@ export default function ExamTable() {
 
             {showModal && <CreateAcountModalDynmic
                 isOpen={showModal}
-                onClose={() => setShowModal(false)}
-                handleSubmit={add ? (e) => handleSubmit(e,true) : handleSubmit}
+                onClose={() => {
+                    setShowModal(false)
+                    setObject({
+                        name: "", 
+                        number_of_questions: 0,
+                        Final_grade:0, 
+                        Start_date: "",
+                        End_date: "",
+                        subject_id: [],
+                        time:0 
+                    })
+                    setError("")
+                    setAdd(false)
+                }}
+                handleSubmit={add ? (e) => handleSubmit(e,true) : (e) => handleSubmit(e,false)}
                 isSubmitting={isSubmitting}
                 error={error}
                 modalTitle={add ? "Add Exam" :`Edit Exam`}
                 formFields={formFields}
                 submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
                 submitButtonVariant="primary"
+                size="h-[600px] overflow-y-scroll"
             />}
 
             {isWaiting ? (<Spinner />) : (
@@ -124,81 +147,17 @@ export default function ExamTable() {
                     columns={examColumns}
                     data={exams}
                     renderRow={(exam) => (
-                        <tr dir={lang === "ar" ? "rtl" : ""} className="text-gray-700 dark:text-gray-400" key={exam.id}>
-                            <td className="px-4 py-3">
-                                <div className="flex items-center text-sm">
-                                    <div className="mr-4">
-                                        <p className="font-semibold">{exam.name}</p>
-                                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                                            {exam.number_of_questions} question /
-                                            {exam.Final_grade} final grade /
-                                            {exam.time} min
-                                        </p>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td className="px-4 py-3 text-xs">
-                                <span className={`px-2 py-1 text-[12px] font-semibold leading-tight rounded-full 
-                                                ${exam.status === 0 ? "text-red-700 bg-red-100 dark:bg-red-700 dark:text-red-700" :
-                                        "text-green-700 bg-green-100 dark:bg-green-700 dark:text-green-100"}
-                                        `}>
-                                    {exam.status === 0 ? authLang[langs[lang]].Inactive : authLang[langs[lang]].Active}
-                                </span>
-                            </td>
-
-                            <td className="px-4 py-3 text-sm">
-                                <select className="px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
-                                    {Array.isArray(exam.subject) && exam.subject.length > 0 ? (
-                                        exam.subject.map((drug, index) => (
-                                            <option key={index} value={drug.name}>
-                                                {drug.subject_id}
-                                            </option>
-                                        ))
-                                    ) : (
-                                        <option disabled>لا توجد أدوية</option>
-                                    )}
-                                </select>
-                            </td>
-
-                            <td className="px-4 py-3 text-sm">
-                                {exam.Start_date} to {exam.End_date}
-                            </td>
-
-                            <td className="px-4 py-3 text-sm">
-                                <div className="flex items-center space-x-4 text-sm">
-                                    {actions.map((a => (
-                                        <button
-                                            key={a.id}
-                                            className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray cursor-pointer"
-                                            aria-label={a.label}
-                                            onClick={() => {
-                                                if (a.label === "Delete") {
-                                                    handleDelete(exam.id, exam.name);
-                                                } else if (a.label === "Edit") onEdit?.(exam);
-                                            }}                                    >
-                                            <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d={a.d} fillRule="evenodd" clipRule="evenodd"></path>
-                                            </svg>
-                                        </button>
-                                    )))}
-                                </div>
-                            </td>
-                        </tr>
+                        <ExamRow key={exam.id} exam={exam} lang={lang} actions={actions} onDelete={handleDelete} onEdit={onEdit} />
                     )}
                 />)}
-            <div className="flex justify-end">
-                <div className="fixed bottom-4 right-6 mt-4">
-                    <Button
-                        name={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Exam}
-                        signal="+"
-                        onClick={() => {
-                            setShowModal(true)
-                            setAdd(true)
-                        }}
-                    />
-                </div>
-            </div>
+            <FlexButton 
+                label={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Exam} 
+                signal="+"
+                onClick={() => {
+                    setShowModal(true)
+                    setAdd(true)
+                }}
+            />
         </>
     )
 }

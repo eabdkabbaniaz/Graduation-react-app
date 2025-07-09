@@ -56,6 +56,16 @@ export const authLang = {
     Subjects: "المواد",
     subjectsDescription: "هذه صفحة المواد",
     id: "رقم",
+    Semester:"فصل",
+    semesterDescription: "هذه صفحة الفصول",
+    Marks: "العلامات",
+    marksDescription: "هذه صفحة العلامات",
+    student_name: "اسم الطالب",
+    exam_score: "علامة الاختبار",
+    assessment_score: "علامة التقدير",
+    attendance_average: "متوسط الحضور",
+    final_grade: "العلامة النهائية",
+    Export: "تصدير",
 
 
 
@@ -159,7 +169,22 @@ export const authLang = {
     Subject: "Subject",
     Subjects: "Subjects",
     subjectsDescription: "this is subjects page",
+    semesterDescription: "this is semester page",
     id: "id",
+    Semester:"Semester",
+    Marks: "Marks",
+    marksDescription: "this is Marks page",
+    student_name: "student name",
+    exam_score: "exam score",
+    assessment_score: "assessment score",
+    attendance_average: "attendance average",
+    final_grade: "final grade",
+    Export: "Export",
+
+
+
+
+
 
 
     

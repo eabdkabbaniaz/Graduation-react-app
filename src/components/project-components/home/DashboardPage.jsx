@@ -2,7 +2,7 @@ import CustomCard from "../../ui-components/CustomCard";
 import CustomCharts from "../../ui-components/CustomCharts";
 import { cards } from "../../../store/Data";
 import MainContent from "../layout/MainContent";
-import UniversityTable from "../Universities/UniversityTable";
+import UniversityTable from "../medictions/system/SystemTable";
 import { useContext } from "react";
 import LangContext from "../../../context/LangContext";
 import { authLang } from "../../../lang/authLang";

@@ -1,16 +1,15 @@
 import MainContent from "../layout/MainContent";
 import ExamTable from "./ExamTable";
 import Button from "../../ui-components/Button";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Exams({name , description}) {
 
+    const navigate = useNavigate();
     return (
         <MainContent name={name} description={description}>
             <div dir="rtl">
-            <Link to="../questions">
-            <Button signal="" name="show all questions"/>
-            </Link>  
+            <Button signal="" name="show all questions" onClick={() => navigate("../questions")} />
             </div>
             <ExamTable />
         </MainContent>

@@ -2,7 +2,6 @@ import './App.css'
 import CreateAccount from './components/project-components/create_account/createAccount'
 import { Route, Routes } from 'react-router-dom'
 import MainApp from './components/project-components/main/MainApp'
-import Universities from './components/project-components/Universities/Universities'
 import DashboardPage from './components/project-components/home/DashboardPage'
 import Charts from './components/project-components/charts/Charts'
 import Students from './components/project-components/students/Students'
@@ -18,6 +17,10 @@ import Sessions from './components/project-components/sessions/Sessions'
 import Exams from './components/project-components/exams/Exams'
 import Subjects from './components/project-components/subjects/Subjects'
 import SessionQRCode from './components/ui-components/SessionQRCode'
+import Semester from './components/project-components/semesters/Semester'
+import Marks from './components/project-components/marks/Marks'
+import Medictions from './components/project-components/medictions/mediction/Medications'
+
 
 function App() {
 
@@ -30,14 +33,15 @@ function App() {
     <Routes>
       <Route path="/" element={<MainApp lang={lang} />}>
         <Route path="/dashboard" element={<DashboardPage name={authLang[langs[lang]].Dashboard} description={authLang[langs[lang]].homeDescription} />} />
-        <Route path="/universities" element={<Universities name={authLang[langs[lang]].Universities} description={authLang[langs[lang]].universitiesDescription} />} />
+        <Route path="/universities" element={<Medictions name={authLang[langs[lang]].Universities} description={authLang[langs[lang]].universitiesDescription} />} />
         <Route path="/students" element={<Students name={authLang[langs[lang]].Students} description={authLang[langs[lang]].studentsDescription} />} />  
         <Route path="/charts" element={<Charts name={authLang[langs[lang]].Charts} description={authLang[langs[lang]].chartsDescription} />} />    
         <Route path="/experinences" element={<Experinence name={authLang[langs[lang]].Experinences} description={authLang[langs[lang]].experinencesDescription} />} />      
         <Route path="/teachers" element={<Teacher name={authLang[langs[lang]].Teachers} description={authLang[langs[lang]].teachersDescription} />} />
         <Route path="/exams" element={<Exams name={authLang[langs[lang]].Exams} description={authLang[langs[lang]].examsDescription} />} />  
         <Route path="/sessions" element={<Sessions name={authLang[langs[lang]].Sessions} description={authLang[langs[lang]].sessionsDescription} setSessionNameQR={setSessionNameQR} setCode={setCode} />} />            
-        <Route path="/subjects" element={<Subjects name={authLang[langs[lang]].Subjects} description={authLang[langs[lang]].subjectsDescription} />} />            
+        <Route path="/subjects" element={<Subjects name={authLang[langs[lang]].Subjects} description={authLang[langs[lang]].subjectsDescription} />} /> 
+        <Route path="/marks" element={<Marks name={authLang[langs[lang]].Marks} description={authLang[langs[lang]].marksDescription} />} />                       
       </Route>
       <Route path="/create_account" element={<CreateAccount />} />
       <Route path="/questions" element={<Questions />} />

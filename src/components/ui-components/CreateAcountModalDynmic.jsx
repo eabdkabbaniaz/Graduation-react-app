@@ -51,6 +51,7 @@ const CreateAcountModalDynmic = ({
                                                 onChange={field.onChange}
                                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
                                                 required={field.required || false}
+                                                multiple={field.multiple}
                                             >
                                                 {field.options.map((option, i) => (
                                                     <option key={i} value={option.value}>

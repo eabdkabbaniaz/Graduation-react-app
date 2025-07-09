@@ -1,14 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import { actions, sessionColumns, universityColumns } from "../../../store/Data";
+import { actions, sessionColumns } from "../../../store/Data";
 import CustomTable from "../../ui-components/CustomTable";
 import DeleteModal from "../../ui-components/DeleteModal";
 import LangContext from "../../../context/LangContext";
 import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
-import { deleteSession, editSession, getSession } from "../../../api/session";
+import { addSession, deleteSession, editSession, getSession } from "../../../api/session";
 import Spinner from "../../ui-components/Spinner";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
 import { useNavigate } from "react-router-dom";
+import Button from "../../ui-components/Button";
 
 export default function SessionsTable({setSessionNameQR,setCode}) {
 
@@ -19,10 +20,10 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
     const [sessions, setSessions] = useState([]);
     const [isWaiting, setIsWaiting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [object, setObject] = useState({ id: "", name: "", drug_ids: [] });
-    const [id, setId] = useState();
+    const [object, setObject] = useState({ name: "", drug_ids: [] ,experience_id:1,status: true });
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(null);
+    const [add, setAdd] = useState(false);
 
     const navigate = useNavigate();
 
@@ -62,7 +63,7 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
     };
 
     const onEdit = (obj) => {
-        setId(obj.id)
+        setSessionId(obj.id)
         setObject({
             ...object,
             name: obj.name,
@@ -72,19 +73,14 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
     }
 
     const handleSubmit = async (e, isAdd) => {
-        if (isAdd) {
-            console.log(isAdd)
-        }
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await editSession(id, object);
-            setSessions(prev =>
-                prev.map(exp =>
-                    exp.id === object.id
-                        ? { ...exp, object } : exp
-                )
-            );
+            if (isAdd) {
+                await addSession(object);
+            }else {
+                await editSession(sessionId, object);
+            }
             setShowModal(false);
         } catch (err) {
             setError(" An error occurred during submission");
@@ -131,13 +127,21 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
 
             {showModal && <CreateAcountModalDynmic
                 isOpen={showModal}
-                onClose={() => setShowModal(false)}
-                handleSubmit={handleSubmit}
+                onClose={() => {
+                    setShowModal(false)
+                    setObject({
+                        name: "", 
+                        drug_ids: [],
+                    })
+                    setError("")
+                    setAdd(false)
+                }}                
+                handleSubmit={add ? (e) => handleSubmit(e,true) : (e) => handleSubmit(e,false)}
                 isSubmitting={isSubmitting}
                 error={error}
-                modalTitle={`Edit Session ${object.name}`}
+                modalTitle={add ? "Add Exam" :`Edit Exam`}
                 formFields={formFields}
-                submitButtonText={isSubmitting ? "editing..." : "edit"}
+                submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
                 submitButtonVariant="primary"
             />}
 
@@ -156,10 +160,8 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                             </td>
 
                             <td className="px-4 py-3 text-xs">
-                                <span
-                                    className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
-                                >
-                                    {session.experience_id}
+                                <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                    {session.experience_id.name}
                                 </span>
                             </td>
 
@@ -213,6 +215,19 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                         </tr>
                     )}
                 />)}
+            <div className="flex justify-end">
+                <div className="fixed bottom-4 right-6 mt-4">
+                    <Button
+                        name={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Sessions}
+                        signal="+"
+                        onClick={() => {
+                            setShowModal(true)
+                            setAdd(true)
+                        }}
+                    />
+                </div>
+            </div>
+
         </>
     )
 }

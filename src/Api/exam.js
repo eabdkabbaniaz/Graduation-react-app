@@ -15,28 +15,22 @@ export const deleteExam = async (id) => {
     return await axiosInstance.delete(`/exams/destroy/${id}`);
 };
 
-export const createTeacher = async ({ name, email }) => {
+export const addExam = async (data) => {
     try {
-        const response = await axiosInstance.post(`/teacher/create`, {
-            name,
-            email,
-        });
-        console.log(response.data, "dataloehruekj");
-        return response.data.data.original.data;
+        const response = await axiosInstance.post(`/exams/store`, data);
+        return response.data.data;
     } catch (error) {
-        console.error("فشل في إنشاء المعيد:", error);
+        console.error("فشل في إنشاء اختبار:", error);
         throw error;
     }
 };
 
-
-
 export const editExam = async (id, data) => {
     try {
-        const response = await axiosInstance.put(`/Exam/update/${id}`, data);
+        const response = await axiosInstance.put(`/exams/update/${id}`, data);
         return response.data;
     } catch (error) {
-        console.error("فشل في تحديث بيانات الجلسة:", error);
+        console.error("فشل في تحديث بيانات الامتحان:", error);
         throw error;
     }
 };

@@ -1,10 +1,11 @@
 import MainContent from "../layout/MainContent";
-import UniversityTable from "./UniversityTable";
+import MarksTable from "./MarksTable";
 
-export default function Universities({ name , description}) {
+export default function Marks({name , description}) {
+
     return (
         <MainContent name={name} description={description}>
-            <UniversityTable />
+            <MarksTable />
         </MainContent>
     )
 }
