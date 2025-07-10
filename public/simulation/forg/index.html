@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <script src="final.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d4edda; 
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch; 
+            gap: 15px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px; /* تحديد عرض مناسب للقسم */
+        }
+
+        label {
+            font-weight: bold;
+            display: block; 
+            margin-bottom: 5px;
+        }
+
+        select,
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            width: 100%; 
+            display: block; 
+        }
+
+        button {
+            padding: 15px; 
+            font-size: 18px;
+            width: 100%; 
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #388E3C;
+        }
+
+        .chart-container {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        canvas {
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 800px !important;
+            height: 550px !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="controls">
+
+        <label for="drugs">Select Drug</label>
+        <select id="drugs">
+            <option value="">Select Drug</option>
+        </select>
+
+        <label for="volume">Enter volume</label>
+        <input type="number" id="volume" step="0.01" placeholder="أدخل الحجم">
+
+        
+        <label for="concentration">Enter concentration:</label>
+        <select id="concentration">
+            <option value="1E-1">1E-1</option>
+            <option value="1E-2">1E-2</option>
+            <option value="1E-3">1E-3</option>
+        </select>
+
+        <button onclick="submitDrug()">Add drug</button>
+<button onclick=Clean()>Clean</button>
+        <p id="selectedDrug"></p>
+    </div>
+
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script>
+        var NewDrugs = [
+            { "id": 0, "Name": "Acetylcholine" },
+            { "id": 3, "Name": "Magnesium " },
+            { "id": 2, "Name": "Atropine" },
+            { "id": 1, "Name": "Adrenaline (Epinephrine)" },
+            { "id": 4, "Name": "Prazosin" },
+        ];
+
+        var selectElement = document.getElementById("drugs");
+        var selectedDrugElement = document.getElementById("selectedDrug");
+
+        NewDrugs.forEach(function (drug) {
+            var option = document.createElement("option");
+            option.value = drug.id;
+            option.textContent = drug.Name;
+            selectElement.appendChild(option);
+        });
+
+        function submitDrug() {
+            var selectedId = document.getElementById("drugs").value;
+            var volume = document.getElementById("volume").value;
+            var concentration = document.getElementById("concentration").value;
+
+            if (selectedId === "" || volume === "") {
+                alert("Enter drug and volume.");
+                return;
+            }
+
+            selectedDrugElement.textContent = `المعرف: ${selectedId}, الحجم: ${volume}, التركيز: ${concentration}`;
+            FinalBathConcentration(parseFloat(concentration), parseInt(selectedId), parseFloat(volume));
+        }
+
+    </script>
+
+    <script>
+  const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'ما عم لاقي اسم حطو ',
+                    data: [],
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: false,
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: false,
+                        min: 0,
+                        stepSize: 1,
+                    },
+                    y: {
+                        beginAtZero: false,
+                        stepSize: 5,
+                    }
+                }
+            }
+        });
+        setInterval(() => {
+            const newData = stimulation();
+            pulseCount =pulse();
+            console.log("pulseCount "+pulseCount)                
+            myChart.data.labels.push(newData[0]);
+            myChart.data.datasets[0].data.push(newData[1]);
+            myChart.update();
+        },1);
+
+    </script>
+</body>
+
+</html>

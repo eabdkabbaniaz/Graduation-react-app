@@ -7,12 +7,15 @@ import Button from "../../ui-components/Button";
 import { langs } from "../../../lang/langs";
 import { authLang } from "../../../lang/authLang";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
+import FlexButton from "../../ui-components/FlexButton";
+import PopupExperiment from "../../ui-components/PopupExperiment";
 
 const Experinence = ({ name, description }) => {
 
     const { lang, setLang } = useContext(LangContext)
     const [experiences, setExperiences] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [showstart, setShowStart] = useState(false);
     const [add, setAdd] = useState(false);
     const [isWaiting, setIsWaiting] = useState(false);
     const [error, setError] = useState(null);
@@ -120,6 +123,8 @@ const Experinence = ({ name, description }) => {
 
     return (
         <MainContent name={name} description={description}>
+            <PopupExperiment isOpen={showstart} onClose={() => setShowStart(false)} />
+
             <ExperinenceTable
                 data={experiences}
                 onEdit={onEdit}
@@ -153,18 +158,30 @@ const Experinence = ({ name, description }) => {
                 submitButtonVariant="primary"
             />}
 
-            <div className="flex justify-end">
-                <div className="fixed bottom-4 right-6 mt-4">
-                    <Button
-                        name={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Experinence}
-                        signal="+"
-                        onClick={() => {
-                            setShowModal(true)
-                            setAdd(true)
-                        }}
-                    />
-                </div>
+            <div className="fixed bottom-4 right-6">
+            <button
+                onClick={() => {
+                setShowStart(true);
+                }}
+                className="w-14 h-14 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 dark:text-white shadow-lg transition-all duration-300"
+            >
+                <svg
+                className="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                >
+                <path fillRule="evenodd" d="M6.5 5.5v9l8-4.5-8-4.5z" clipRule="evenodd" />
+                </svg>
+            </button>
             </div>
+            <FlexButton 
+                label={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Experinence} 
+                signal="+"
+                onClick={() => {
+                    setShowModal(true)
+                    setAdd(true)
+                }}
+            />
         </MainContent>
     );
 }

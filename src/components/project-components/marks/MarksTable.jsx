@@ -5,13 +5,14 @@ import LangContext from "../../../context/LangContext";
 import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
 import Spinner from "../../ui-components/Spinner";
-import { exportMarks, getMarks } from "../../../api/marks";
+import { exportMarks, getMarks, userMarkDetails } from "../../../api/marks";
 import FlexButton from "../../ui-components/FlexButton";
 import DeleteModal from "../../ui-components/DeleteModal";
 import ExportPopup from "../../ui-components/ExportPopup";
 import FlexIcon from "../../ui-components/FlexIcon";
 import ListLanguages from "../layout/Tools/language/ListLanguages";
 import CustomMenu from "../../ui-components/CustomMenu";
+import DataPopup from "../../ui-components/DataPopup";
 
 export default function MarksTable() {
 
@@ -21,6 +22,8 @@ export default function MarksTable() {
     const [isWaiting, setIsWaiting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showDataModal, setShowDataModal] = useState(false);
+    const [markDetails, setMarkDetails] = useState({});
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -38,13 +41,24 @@ export default function MarksTable() {
         getData();
     }, [isSubmitting === false]);
 
+    const handleMarkDetails = async (id) => {
+        try {
+            const data = await userMarkDetails(id);
+            setMarkDetails(data)
+            setShowDataModal(true);
+        } catch (err) {
+            console.log("An error occurred during submission");
+        }         
+    };
+
+
     return (
         <>
-            {/* <ExportPopup
-                    isOpen={showModal}
-                    onClose={() => setShowModal(false)}
-                    options={options}
-                /> */}
+            {showDataModal && <DataPopup
+                    data={markDetails}
+                    onClose={() => setShowDataModal(false)} // مهم!
+                />}
+                
             {showModal && <CustomMenu />}
 
             {isWaiting ? (<Spinner />) : (
@@ -52,7 +66,7 @@ export default function MarksTable() {
                     columns={marksColumns}
                     data={marks}
                     renderRow={(mark) => (
-                        <tr dir={lang === "ar" ? "rtl" : ""} className="text-gray-700 dark:text-gray-400" key={mark.user_id}>
+                        <tr dir={lang === "ar" ? "rtl" : ""} className="text-gray-700 dark:text-gray-400 cursor-pointer" key={mark.user_id} onClick={() => {handleMarkDetails(mark.user_id)}}>
 
                             <td className="px-4 py-3">
                                 <div className="flex items-center text-sm">

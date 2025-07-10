@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="rabbits.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>initial()</script>
+    <button onclick="initial()">initial</button>
+    <button onclick="Cleans()">Clean</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.05)">Acetylcholine(0.05)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.1)">Acetylcholine(0.1)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.2)">Acetylcholine2(0.2)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.3)">Acetylcholine2(0.3)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.4)">Acetylcholine2(0.4)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.5)">Acetylcholine2(0.5)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.6)">Acetylcholine2(0.6)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.7)">Acetylcholine2(0.7)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.8)">Acetylcholine2(0.8)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,0.9)">Acetylcholine2(0.9)</button>
+    <button onclick="FinalBathConcentration(2E-1,1,1)">Acetylcholine2(1)</button>
+    <br>
+    <button onclick="FinalBathConcentration(1E-1,5,0.05)">adrenaline(0.05)</button>
+    <button onclick="FinalBathConcentration(1E-1,5,0.1)">adrenaline1(0.1)</button>
+    <button onclick="FinalBathConcentration(1E-1,5,0.2)">adrenaline1(0.2)</button>
+    <button onclick="FinalBathConcentration(1E-1,5,0.3)">adrenaline(0.3)1</button>
+    <button onclick="FinalBathConcentration(1E-1,5,0.4)">adrenaline1(0.4)</button>
+    <button onclick="FinalBathConcentration(1E-1,5,0.5)">adrenaline1(0.5)</button><br>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.05)">Barium (0.05)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.1)">Barium (0.1)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.2)">Barium (0.2)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.4)">Barium (0.3)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.5)">Barium (0.5)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.6)">Barium (0.6)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.7)">Barium (0.7)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.8)">Barium (0.8)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 0.9)">Barium (0.9)</button>
+    <button onclick="FinalBathConcentration(1E-1, 2, 1)">Barium 1/button>
+
+
+    <br>
+    <button onclick="FinalBathConcentration(1E-1, 7, 0.05)">Magnesium</button>
+    <button onclick="FinalBathConcentration(1E-1, 7, 0.1)">Magnesium1</button>
+    <button onclick="FinalBathConcentration(1E-1, 7, 0.2)">Magnesium2</button>
+    <br>
+    <br>
+    <button onclick="FinalBathConcentration(1E-1, 6, 0.05)">AlphaBeta Blocker(0.05)</button>
+    <button onclick="FinalBathConcentration(1E-1, 6, 0.1)">Phentolamine (Alpha Blocker)0.1</button>
+    <button onclick="FinalBathConcentration(1E-1, 6, 0.2)">Phentolamine (Alpha Blocker)0.2</button>
+    <button onclick="FinalBathConcentration(1E-1, 6, 0.3)">AlphaBeta Blocker(0.3)</button>
+    <button onclick="FinalBathConcentration(1E-1, 6, 0.4)">Phentolamine (Alpha Blocker)0.4</button>
+    <button onclick="FinalBathConcentration(1E-1, 6, 0.5)">Phentolamine (Alpha Blocker)0.5</button>
+    <br>
+    <button onclick="FinalBathConcentration(2E-1, 4, 0.05)">Atropine</button>
+    <button onclick="FinalBathConcentration(2E-1, 4, 0.1)">Atropine</button>
+    <button onclick="FinalBathConcentration(2E-1, 4, 0.15)">Atropine</button>
+    <button onclick="FinalBathConcentration(2E-1, 4, 0.3)">Atropine</button>
+    <button onclick="FinalBathConcentration(2E-1, 4, 0.4)">Atropine</button>
+
+    <canvas id="myChart" width="400" height="200"></canvas>
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label:
+                        'بيانات عشوائية',
+                    data: [],
+
+                    borderColor: 'rgb(75, 192, 192)',
+                    fill: false,
+                   pointRadius: 0 // <=== هذا يخفي النقاط
+
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: false,
+                        min: 0,
+
+                        stepSize: 1,
+                    },
+                    y: {
+                        beginAtZero: false,
+
+                        stepSize: 5,
+                        ticks: {
+
+                        }
+                    }
+                }
+            }
+        });
+        setInterval(() => {
+            const newData = stimulation();
+            if (newData && newData.x !== undefined && newData.y !== undefined) {
+                myChart.data.labels.push(newData.y);
+                myChart.data.datasets[0].data.push(newData.x);
+                myChart.update();
+            }
+        }, 300);
+
+    </script>
+</body>
+
+</html>

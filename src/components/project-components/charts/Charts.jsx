@@ -1,4 +1,4 @@
-import CustomCharts from "../../ui-components/CustomCharts";
+import CustomCharts from "./CustomCharts";
 import MainContent from "../layout/MainContent";
 
 export default function Charts({ name , description }) {

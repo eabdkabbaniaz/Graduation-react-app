@@ -1,5 +1,5 @@
 import CustomCard from "../../ui-components/CustomCard";
-import CustomCharts from "../../ui-components/CustomCharts";
+import CustomCharts from "../charts/CustomCharts";
 import { cards } from "../../../store/Data";
 import MainContent from "../layout/MainContent";
 import UniversityTable from "../medictions/system/SystemTable";
