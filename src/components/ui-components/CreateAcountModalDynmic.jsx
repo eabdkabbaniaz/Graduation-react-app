@@ -97,9 +97,6 @@ const CreateAcountModalDynmic = ({
                                         onClick={onClose}
                                     />
                                 </div>
-
-
-
                             </form>
                         </Dialog.Panel>
                     </Transition.Child>
