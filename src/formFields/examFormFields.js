@@ -35,14 +35,19 @@ export const getExamFormFields = (object, setObject, subjects = []) => [
       required: true,
     },
     {
-      label: "subject",
-      type: "select",
-      multiple: true,
-      value: object.subject_id,
+      label: "subjects",
+      type: "checkbox-group",
+      value: object.subject_id || [],
       required: true,
-      onChange: (e) => {
-        const selectedValues = Array.from(e.target.selectedOptions, option => Number(option.value));
-        setObject({ ...object, subject_id: selectedValues });
+      onChange: (val) => {
+        const exists = object.subject_id?.includes(val);
+        let newSubjects;
+        if (exists) {
+          newSubjects = object.subject_id.filter((id) => id !== val);
+        } else {
+          newSubjects = [...(object.subject_id || []), val];
+        }
+        setObject({ ...object, subject_id: newSubjects });
       },
       options: Array.isArray(subjects)
         ? subjects.map((subject) => ({

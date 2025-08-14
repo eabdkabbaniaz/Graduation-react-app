@@ -28,7 +28,6 @@ export const editQustion = async (id, data) => {
 export const addQustion = async (data) => {
     try {
         const response = await axiosInstance.post(`/questions/store`, data);
-        console.log(response.message)
         return response.message;
     } catch (error) {
         console.error("فشل في إنشاءالسؤال:", error);

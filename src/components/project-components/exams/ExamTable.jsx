@@ -15,6 +15,8 @@ import ExamRow from "./ExamRow";
 
 export default function ExamTable() {
 
+    const role = localStorage.getItem("role");
+
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [examName, setExamName] = useState();
     const [examId, setExamId] = useState();
@@ -75,6 +77,7 @@ export default function ExamTable() {
 
     const onEdit = (obj) => {
         setExamId(obj.id)
+        console.log(obj)
         setObject({
             ...object,
             name: obj.name,
@@ -82,7 +85,7 @@ export default function ExamTable() {
             Final_grade: obj.Final_grade, 
             Start_date: obj.Start_date,
             End_date: obj.End_date,
-            subject_id: obj.subject_id?.map((d) => d.id),
+            subject_id: obj.subject?.map((d) => d.subject_id),
             time:obj.time    
         });
         setShowModal(true)
@@ -98,6 +101,15 @@ export default function ExamTable() {
                 await editExam(examId, object);
             }
             setShowModal(false);
+            setObject({
+                name: "", 
+                number_of_questions: 0,
+                Final_grade:0, 
+                Start_date: "",
+                End_date: "",
+                subject_id: [],
+                time:0 
+            })
         } catch (err) {
             setError(" An error occurred during submission");
         } finally {
@@ -120,15 +132,6 @@ export default function ExamTable() {
                 isOpen={showModal}
                 onClose={() => {
                     setShowModal(false)
-                    setObject({
-                        name: "", 
-                        number_of_questions: 0,
-                        Final_grade:0, 
-                        Start_date: "",
-                        End_date: "",
-                        subject_id: [],
-                        time:0 
-                    })
                     setError("")
                     setAdd(false)
                 }}
@@ -150,14 +153,14 @@ export default function ExamTable() {
                         <ExamRow key={exam.id} exam={exam} lang={lang} actions={actions} onDelete={handleDelete} onEdit={onEdit} />
                     )}
                 />)}
-            <FlexButton 
+            {role === "teacher" ? "" : <FlexButton 
                 label={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Exam} 
                 signal="+"
                 onClick={() => {
                     setShowModal(true)
                     setAdd(true)
                 }}
-            />
+            />}
         </>
     )
 }

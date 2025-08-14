@@ -2,6 +2,9 @@ import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
 
 export default function ExamRow({exam, lang, actions, onDelete, onEdit}) {
+
+  const role = localStorage.getItem("role");
+
   return (
     <tr
       dir={lang === "ar" ? "rtl" : ""}
@@ -41,7 +44,7 @@ export default function ExamRow({exam, lang, actions, onDelete, onEdit}) {
           {Array.isArray(exam.subject) && exam.subject.length > 0 ? (
             exam.subject.map((s, index) => (
               <option key={index} value={s.subject_id}>
-                {s.subject_id}
+                {s.subjects?.name}
               </option>
             ))
           ) : (
@@ -56,7 +59,7 @@ export default function ExamRow({exam, lang, actions, onDelete, onEdit}) {
 
       <td className="px-4 py-3 text-sm">
         <div className="flex items-center space-x-4 text-sm">
-          {actions.map((a) => (
+          {role === "teacher" ? "" : actions.map((a) => (
             <button
               key={a.id}
               className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"

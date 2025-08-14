@@ -5,8 +5,11 @@ import Spinner from "../../ui-components/Spinner";
 import QuestionsList from "../../ui-components/QuestionsList";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic"
 import Button from "../../ui-components/Button";
+import { getSubject } from "../../../api/subject";
 
 export default function Questions() {
+    
+    const role = localStorage.getItem("role");
 
     const [questionId, setQuestionId] = useState(null);
     const [index, setIndex] = useState(null);
@@ -24,15 +27,18 @@ export default function Questions() {
     const [error, setError] = useState(null);
     const [isWaiting, setIsWaiting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [subjects, setSubjects] = useState([]);
 
     useEffect(() => {
         const getData = async () => {
             try {
                 setIsWaiting(true);
                 const data = await getQuestions();
+                const dataSubject = await getSubject();
+                setSubjects(dataSubject);
                 setQuestions(data);
             } catch (error) {
-                setError("An error occurred while loading the data😥");
+                setError("An error occurred while loading the data");
             } finally {
                 setIsWaiting(false);
             }
@@ -59,7 +65,6 @@ export default function Questions() {
             deleteQustion(questionId)
                 .then(() => {
                     setQuestions(prev => prev.filter(s => s.id !== questionId));
-                    setTimeout(() => { }, 3000);
                     setShowDeleteModal(false);
                 })
                 .catch(err => {
@@ -76,11 +81,29 @@ export default function Questions() {
 
     const handleSubmit = async (e, isAdd) => {
         e.preventDefault();
+
+        let updatedObject = { ...submitObject };
+
+        if (!submitObject.answers?.some(answer => answer.is_correct === 1)) {
+            const updatedAnswers = submitObject.answers.map((answer, index) => ({
+                ...answer,
+                is_correct: index === 0 ? true : false
+            }));
+            updatedObject = { ...updatedObject, answers: updatedAnswers };
+            setSubmitObject(updatedObject);
+        }
+
         setIsSubmitting(true);
         try {
             if (isAdd) {
-                await addQustion(submitObject);
+                await addQustion(updatedObject);
                 setShowAddModal(false);
+                setSubmitObject({
+                    question: "",
+                    subject_id: 1,
+                    answers: [{}]
+                })
+                setN(2)
 
             } else {
                 await editQustion(object.id, object);
@@ -100,13 +123,22 @@ export default function Questions() {
             onChange: (e) => setObject({ ...object, question: e.target.value }),
             required: true,
         },
-        {
+        {  
             label: "Drugs",
-            value: object.subject?.name || '',
-            onChange: (e) => setObject({
-                ...object,
-                subject: { ...object.subject, name: e.target.value }
-            }),
+            type: "select",
+            value: object.subject_id || '',
+            onChange: (e) => {
+                setObject({
+                    ...object,
+                    subject_id: e.target.value
+                });
+            },
+            options: Array.isArray(subjects)
+                ? subjects.map((subject) => ({
+                    value: subject.id,
+                    label: subject.name,
+                }))
+                : [],
             required: true,
         },
         ...(Array.isArray(object.answers)
@@ -162,12 +194,22 @@ export default function Questions() {
             required: true,
         },
         {
-            label: "subject_id",
-            value: submitObject.subject_id,
-            onChange: (e) => setSubmitObject({
-                ...submitObject,
-                subject: { ...submitObject.subject_id, name: e.target.value }
-            }),
+            label: "subject",
+            value: submitObject.name,
+            type: "select",
+            onChange: (e) => {
+                setSubmitObject({
+                    ...submitObject,
+                    subject_id: e.target.value,
+                });
+            },
+            options: Array.isArray(subjects)
+                ? subjects.map((subject) => ({
+                    value: subject.id,
+                    label: subject.name,
+                }))
+                : [],
+
             required: true,
         },
         {
@@ -257,9 +299,9 @@ export default function Questions() {
                 size="h-[700px] overflow-y-scroll"
             />}
 
-            <div className="absolute right-[20px] bottom-[20px]">
+            {(role === "teacher" || "manger") ? "" : <div className="fixed right-[20px] bottom-[20px]">
                 <Button name="add question" onClick={() => setShowAddModal(true)} />
-            </div>
+            </div>}
 
             <div dir="rtl" className="max-w-4xl mx-auto border border-black p-4">
                 <div className="border border-black p-4 mb-8">

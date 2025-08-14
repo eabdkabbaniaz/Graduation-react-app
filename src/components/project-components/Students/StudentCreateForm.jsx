@@ -4,7 +4,7 @@ import { createStudent, fetchStudents } from "../../../Api/studentApi";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
 import { useNavigate } from "react-router-dom";
 
-const StudentCreateForm = ({ setData, categories, setError, error }) => {
+const StudentCreateForm = ({ setData, categories, setError, error, showModal,setShowModal }) => {
     const navigate = useNavigate();
 
     const [name, setName] = useState('');
@@ -26,7 +26,6 @@ const StudentCreateForm = ({ setData, categories, setError, error }) => {
             //// هام جدا جدا: ملاحظة(مشان حدث بيانات الصفحة وهيك بضمن الكل مايصير فين مشاكل)
             const { students } = await fetchStudents();
             setData(students);
-            //// هام جدا جدا 
 
             setName('');
             setUniversityNumber('');
@@ -35,7 +34,7 @@ const StudentCreateForm = ({ setData, categories, setError, error }) => {
             navigate("/students");
 
         } catch (err) {
-            setError("❌ حدث خطأ أثناء الإرسال");
+            setError("حدث خطأ أثناء الإرسال");
         } finally {
             setIsSubmitting(false);
         }
@@ -91,7 +90,10 @@ const StudentCreateForm = ({ setData, categories, setError, error }) => {
                 modalTitle="Add student"
                 formFields={formFields}
                 submitButtonText={isSubmitting ? "Add ..." : "Add student"}
-                submitButtonVariant="primary"
+                innerButton = {true}
+                innerButtonSignal="" 
+                innerButtonName="import students" 
+                innerButtonOnClick={() => setShowModal(true)}
             />
         </div>
     );

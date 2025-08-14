@@ -21,7 +21,7 @@ export default function CategoryFilter({ categories, handleFilter, selectedCateg
           fontSize: '1.2rem'
         }}
       >
-        اختر الفئة
+         choose category
       </InputLabel>
       <Select
         labelId="category-select-label"
@@ -42,8 +42,8 @@ export default function CategoryFilter({ categories, handleFilter, selectedCateg
           },
         }}
       >
-        <MenuItem value="عرض الكل">
-          <em>عرض الكل</em>
+        <MenuItem value="عرض عينة">
+          <em>عرض عينة</em>
         </MenuItem>
         {categories.map((cat) => (
           <MenuItem key={cat.id} value={cat.id}>

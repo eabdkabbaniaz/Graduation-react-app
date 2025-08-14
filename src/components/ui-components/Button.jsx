@@ -24,7 +24,7 @@ export default function Button({
     default: "bg-purple-600 hover:bg-purple-700",
     info: "bg-blue-500 hover:bg-blue-600",
     primary: "bg-green-500 hover:bg-green-600",
-    danger: "bg-red-500 hover:bg-red-600",
+    danger: "bg-gray-500 hover:bg-gray-700",
   };
 
   const sizeClasses = {

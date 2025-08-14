@@ -1,5 +1,5 @@
 import './App.css'
-import CreateAccount from './components/project-components/create_account/createAccount'
+import Login from './components/project-components/login/Login'
 import { Route, Routes } from 'react-router-dom'
 import MainApp from './components/project-components/main/MainApp'
 import DashboardPage from './components/project-components/home/DashboardPage'
@@ -33,7 +33,7 @@ function App() {
     <Routes>
       <Route path="/" element={<MainApp lang={lang} />}>
         <Route path="/dashboard" element={<DashboardPage name={authLang[langs[lang]].Dashboard} description={authLang[langs[lang]].homeDescription} />} />
-        <Route path="/universities" element={<Medictions name={authLang[langs[lang]].Universities} description={authLang[langs[lang]].universitiesDescription} />} />
+        <Route path="/medictions" element={<Medictions name={authLang[langs[lang]].medictions} description={authLang[langs[lang]].medictionsDescription} />} />
         <Route path="/students" element={<Students name={authLang[langs[lang]].Students} description={authLang[langs[lang]].studentsDescription} />} />  
         <Route path="/charts" element={<Charts name={authLang[langs[lang]].Charts} description={authLang[langs[lang]].chartsDescription} />} />    
         <Route path="/experinences" element={<Experinence name={authLang[langs[lang]].Experinences} description={authLang[langs[lang]].experinencesDescription} />} />      
@@ -43,7 +43,7 @@ function App() {
         <Route path="/subjects" element={<Subjects name={authLang[langs[lang]].Subjects} description={authLang[langs[lang]].subjectsDescription} />} /> 
         <Route path="/marks" element={<Marks name={authLang[langs[lang]].Marks} description={authLang[langs[lang]].marksDescription} />} />                       
       </Route>
-      <Route path="/create_account" element={<CreateAccount />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/questions" element={<Questions />} />
       <Route path="/qr" element={<SessionQRCode sessionName={sessionNameQR} code={code} />} />
       <Route path="*" element={<NotFound />} />

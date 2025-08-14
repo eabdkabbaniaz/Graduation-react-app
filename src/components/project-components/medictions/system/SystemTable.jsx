@@ -75,7 +75,6 @@ export default function SystemTable({systemsList, setSystemsList,isSubmitting, s
                 modalTitle={add ? "Add System" :`Edit System`}
                 formFields={formFields}
                 submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
-                submitButtonVariant="primary"
             />}
 
 

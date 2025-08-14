@@ -11,6 +11,8 @@ export default function Sidebar(props) {
 
   const {lang , setLang} = useContext(LangContext)
 
+  const role = localStorage.getItem("role");
+
   return (
     <aside {...props}>
       <div className="py-4 text-gray-500 dark:text-gray-400">
@@ -18,20 +20,24 @@ export default function Sidebar(props) {
           {authLang[langs[lang]].Pharmacology}
         </a>
 
-        {navbar.map((n) => (
-          <Element 
-            key={n.id} 
-            name={authLang[langs[lang]][n.name]}
-            route={authLang[langs['en']][n.name]} 
-            icon={n.icon} 
-            icon2={n.icon2} 
-            isFirstElement={n.id === 1 ? true : false}
-            />
-        ))}
+        {navbar.map((n) => {
+            if (n.role.includes(role)) {
+              return (
+              <Element 
+                key={n.id} 
+                name={authLang[langs[lang]][n.name]}
+                route={authLang[langs['en']][n.name]} 
+                icon={n.icon} 
+                icon2={n.icon2} 
+                isFirstElement={n.id === 1 ? true : false}
+              />
+              )
+            }
+        })}
 
-        <Link to="create_account">
+        <Link to="login">
           <Button 
-            name={authLang[langs[lang]].signUp} 
+            name={authLang[langs[lang]].switchAccount} 
             parentStyle="px-6 my-6" 
             size="large" 
             lang={lang}

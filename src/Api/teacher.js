@@ -3,7 +3,6 @@ import axiosInstance from "./axiosInstance";
 export const fetchTeacher = async () => {
     try {
         const response = await axiosInstance.get(`/teacher/index`);
-        //console.log("response ", response.data);
         const data = response.data.data;
         console.log("data rr4", data)
         return data;
@@ -17,14 +16,14 @@ export const deleteTeacher = async (teacherId) => {
     return await axiosInstance.delete(`/teacher/destroy/${teacherId}`);
 };
 
-export const createTeacher = async ({ name, email }) => {
+export const createTeacher = async ({ name, email, ROLE }) => {
     try {
         const response = await axiosInstance.post(`/teacher/create`, {
             name,
             email,
+            ROLE
         });
-        console.log(response.data, "dataloehruekj");
-        return response.data.data.original.data;
+        return {newTeach: response.data.data.original.data , message: response.data.data.original.message};
     } catch (error) {
         console.error("فشل في إنشاء المعيد:", error);
         throw error;

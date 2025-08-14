@@ -12,6 +12,8 @@ import Button from "../../ui-components/Button";
 
 export default function SubjectTable() {
 
+    const role = localStorage.getItem("role");
+
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [subjectId, setSubjectId] = useState();
     const [subjectName, setSubjectName] = useState();
@@ -144,7 +146,7 @@ export default function SubjectTable() {
 
                             <td className="px-4 py-3 text-sm">
                                 <div className="flex items-center space-x-4 text-sm">
-                                    {actions.map((a => (
+                                    {role === "teacher" ? "" : actions.map((a => (
                                         <button
                                             key={a.id}
                                             className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray cursor-pointer"
@@ -164,7 +166,7 @@ export default function SubjectTable() {
                         </tr>
                     )}
                 />)}
-            <div className="flex justify-end">
+            {role === "teacher" ? "": <div className="flex justify-end">
                 <div className="fixed bottom-4 right-6 mt-4">
                     <Button
                         name={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Subject}
@@ -175,7 +177,7 @@ export default function SubjectTable() {
                         }}
                     />
                 </div>
-            </div>
+            </div>}
         </>
     )
 }

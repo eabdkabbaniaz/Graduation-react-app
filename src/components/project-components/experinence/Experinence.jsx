@@ -88,7 +88,7 @@ const Experinence = ({ name, description }) => {
         { label: "after_instruction", value: afterInstruction, onChange: (e) => setAfterInstruction(e.target.value), required: true, type: "textarea" },
     ];
 
-    const handleSubmit = async (e , isAdd) => {
+    const handleSubmit = async (e, isAdd) => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
@@ -113,6 +113,11 @@ const Experinence = ({ name, description }) => {
                 });
                 setExperiences(prev => [...prev, newExp]);
             }
+            setId("")
+            setExperinenceName('');
+            setBeforeInstruction('');
+            setAfterInstruction('');
+            setAdd(false);
             setShowModal(false);
         } catch (err) {
             setError(" An error occurred during submission");
@@ -146,36 +151,35 @@ const Experinence = ({ name, description }) => {
                     setId("")
                     setExperinenceName('');
                     setBeforeInstruction('');
-                    setAfterInstruction('');   
-                    setAdd(true)     
+                    setAfterInstruction('');
+                    setAdd(false)
                 }}
-                handleSubmit={add ? (e) => handleSubmit(e,true) : handleSubmit}
+                handleSubmit={add ? (e) => handleSubmit(e, true) : handleSubmit}
                 isSubmitting={isSubmitting}
                 error={error}
                 modalTitle={add ? "Add Experience" : "Edit Experience"}
                 formFields={formFields}
                 submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
-                submitButtonVariant="primary"
             />}
 
             <div className="fixed bottom-4 right-6">
-            <button
-                onClick={() => {
-                setShowStart(true);
-                }}
-                className="w-14 h-14 flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 dark:text-white shadow-lg transition-all duration-300"
-            >
-                <svg
-                className="w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+                <button
+                    onClick={() => {
+                        setShowStart(true);
+                    }}
+                    className="w-14 h-14 flex items-center justify-center rounded-full dark:text-gray-100 shadow-lg transition-all duration-300"
                 >
-                <path fillRule="evenodd" d="M6.5 5.5v9l8-4.5-8-4.5z" clipRule="evenodd" />
-                </svg>
-            </button>
+                    <svg
+                        className="w-6 h-6"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path fillRule="evenodd" d="M6.5 5.5v9l8-4.5-8-4.5z" clipRule="evenodd" />
+                    </svg>
+                </button>
             </div>
-            <FlexButton 
-                label={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Experinence} 
+            <FlexButton
+                label={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Experinence}
                 signal="+"
                 onClick={() => {
                     setShowModal(true)

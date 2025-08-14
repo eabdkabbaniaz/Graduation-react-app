@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import MainContent from "../layout/MainContent";
-import TeacherForm from "./TeacherForm";
 import TeacherTable from "./TeacherTable";
 import { fetchTeacher } from "../../../api/teacher";
 const Teacher = ({ name, description }) => {
-    const [selectedTeacher, setSelectedTeacher] = useState(null);
 
     const [teachers, setTeacher] = useState([]);
     const [error, setError] = useState(null);
@@ -17,7 +15,7 @@ const Teacher = ({ name, description }) => {
                 const data = await fetchTeacher();
                 setTeacher(data);
             } catch (error) {
-                setError("An error occurred while loading the data😥");
+                setError("An error occurred while loading the data");
             } finally {
                 setIsWaiting(false);
             }
@@ -27,14 +25,7 @@ const Teacher = ({ name, description }) => {
     
     return (
         <MainContent name={name} description={description}>
-            <TeacherTable
-                teachers={teachers} setTeacher={setTeacher} isWaiting={isWaiting} error={error}
-                onEdit={setSelectedTeacher}
-            />
-            <TeacherForm
-                teacher={selectedTeacher}
-                setData={setTeacher}
-            />
+            <TeacherTable teachers={teachers} setTeacher={setTeacher} isWaiting={isWaiting} setIsWaiting={setIsWaiting} error={error} setError={setError} />
         </MainContent>
     );
 }

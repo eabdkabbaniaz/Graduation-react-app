@@ -20,6 +20,8 @@ const Students = ({ name, description }) => {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -32,7 +34,7 @@ const Students = ({ name, description }) => {
         const data = await fetchCategory();
         setCategories(data);
       } catch (error) {
-        setError("An error occurred while loading the data😥");
+        setError("An error occurred while loading the data");
       } finally {
         setIsWaiting(false);
       }
@@ -55,6 +57,8 @@ const Students = ({ name, description }) => {
         setPage={setPage}
         isSubmitting={isSubmitting}
         setIsSubmitting={setIsSubmitting}
+        showModal={showModal}
+        setShowModal={setShowModal}
       />
 
       <StudentCreateForm
@@ -62,6 +66,8 @@ const Students = ({ name, description }) => {
         categories={categories}
         setError={setError}
         error={error}
+        showModal={showModal}
+        setShowModal={setShowModal}
       />
 
       {isEditModalOpen && (

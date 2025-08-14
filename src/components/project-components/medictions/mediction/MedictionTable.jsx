@@ -2,14 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState , useEffect } from "react";
 import search from "./search.png";
 import { getEffects, getMedications, getSystems } from "../../../../api/medications";
-import QuotationStepper from "../QuotationStepper";
+import QuotationStepper from "../../../ui-components/QuotationStepper";
 import MedicationList from "./MedicationList";
 import SystemTable from "../system/SystemTable";
 import EffectTable from "../effect/EffectTable";
 
 
 export default function MedictionTable() {
-  const navigate = useNavigate();
 
   const [categoryList, setCategoryList] = useState([]);
   const [productsList, setProductsList] = useState([]);
@@ -35,7 +34,7 @@ export default function MedictionTable() {
             setSystemsList(dataSystem);
             setEffectsList(dataEffect);
         } catch (error) {
-            console.log("An error occurred while loading the data😥");
+            console.log("An error occurred while loading the data");
         } finally {
             setIsWaiting(false);
         }
@@ -48,9 +47,9 @@ export default function MedictionTable() {
     setFilter({ id, name });
   };
 
-
   return (
-    <div className="p-8 h-full flex flex-col gap-6 dark:bg-gray-900">
+    <div className="p-8 h-full flex flex-col gap-6">
+      
       <section className="flex flex-wrap items-center gap-4">
        
        <QuotationStepper current={current} setCurrent={setCurrent} />
@@ -64,12 +63,11 @@ export default function MedictionTable() {
           />
           <label 
             htmlFor="filter-toggle"
-            className="cursor-pointer select-none px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none"
+            className="cursor-pointer select-none px-4 py-2 rounded-lg bg-indigo-600 dark:text-gray-100 hover:bg-indigo-700 focus:outline-none"
           >
             Filter
           </label>
 
-          {/* قائمة الفئات */}
           {showOption && (
             <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-lg z-10 p-4 space-y-3">
               <Link
@@ -106,7 +104,6 @@ export default function MedictionTable() {
       {current === 1 ? <SystemTable systemsList={systemsList} setSystemsList={setSystemsList} isSubmitting={isSubmitting} setIsSubmitting={setIsSubmitting} /> : ""}
       {current === 2 ? <EffectTable effectsList={effectsList} setEffectsList={setEffectsList} isSubmitting={isSubmitting} setIsSubmitting={setIsSubmitting} /> : ""}
 
-     
     </div>
   );
 }

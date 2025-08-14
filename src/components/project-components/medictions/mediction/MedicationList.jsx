@@ -1,13 +1,14 @@
 import {Card,CardHeader,CardContent,CardMedia,CardActions,Avatar,IconButton,Button as MUIButton} from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
-import { useNavigate } from "react-router-dom";
 import { useState , useEffect } from "react";
 import DeleteModal from "../../../ui-components/DeleteModal";
 import { addMediction, deleteMediction, editMediction } from "../../../../api/medications";
 import FlexButton from "../../../ui-components/FlexButton";
 import CreateAcountModalDynmic from "../../../ui-components/CreateAcountModalDynmic";
 import { getMedictionFormFields } from "../../../../formFields/medictionFormFields";
+import heart from "../../../../assets/heart.png"
+import intestine from "../../../../assets/intestine.png"
 
 export default function MedicationList({productsList, setProductsList, isSubmitting, setIsSubmitting, systemsList, effectsList}) {
 
@@ -27,8 +28,6 @@ export default function MedicationList({productsList, setProductsList, isSubmitt
       system_id: "",
       effect_id: "",
     });
-
-    const navigate = useNavigate();
 
     const handleDelete = () => {
       if (medID) {
@@ -120,23 +119,21 @@ const formFields = getMedictionFormFields(object, setObject, systemsList, effect
                 modalTitle={add ? "Add Mediction" :`Edit Mediction`}
                 formFields={formFields}
                 submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
-                submitButtonVariant="primary"
                 size="h-[600px] overflow-y-scroll"
             />}
 
 
-         {/* شبكة البطاقات */}
-      {productsList.length === 0 ? (
+      {productsList?.length === 0 ? (
         <p className="text-center my-52 text-lg text-gray-500 dark:text-gray-400">
-          Not Found
+          Loading...
         </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px]">
-          {productsList.map((product) => (
+          {productsList?.map((product) => (
             <Card
               key={product.id}
-              sx={{ borderRadius: "1rem" }}
-              className="shadow-md hover:shadow-lg transition-shadow"
+              sx={{ borderRadius: "1rem", display: 'flex', flexDirection: 'column', height: '100%' }}
+              className="shadow-md hover:shadow-lg transition-shadow dark:bg-gray-700 dark:text-gray-100"
             >
               <CardHeader
                 avatar={
@@ -149,7 +146,8 @@ const formFields = getMedictionFormFields(object, setObject, systemsList, effect
                     setShowDeleteModal(true)
                     setMedID(product.id)
                     setMedName(product.name)
-                    }}>
+                    }} className="dark:text-gray-100">
+                      <span className="text-[20px] mr-[200px]">{product.system?.name}</span>
                     <DeleteIcon  />
                   </IconButton>
                 }
@@ -159,26 +157,31 @@ const formFields = getMedictionFormFields(object, setObject, systemsList, effect
 
               <CardMedia
                 component="img"
-                height="194"
-                // image={`${url}${product.product_path}`}
-                // alt={product.name}
-                className="cursor-pointer"
-                onClick={() => navigate(`/products/${product.id}`)}
-              />
+                image={product.system?.name.startsWith("قلب") ? heart : intestine}
+                alt={product.system?.name}
+                sx={{
+                  height: '200px',
+                  objectFit: 'fill',
+                }}              
+                />
 
-              <CardContent>
+              <CardContent sx={{ flexGrow: 1 }}>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
-                side effects: {product.side_effects}
+                <span className="text-base font-medium text-gray-800 dark:text-gray-100">side effects: </span> 
+                {product.side_effects}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
-                usage: {product.usage}
+                <span className="text-base font-medium text-gray-800 dark:text-gray-100">usage: </span> 
+                 {product.usage} 
                 </p>
 
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
-                dosage: {product.dosage}
+                <span className="text-base font-medium text-gray-800 dark:text-gray-100">dosage: </span> 
+                {product.dosage}
                 </p>
-                <p className="text-base font-medium text-gray-800 dark:text-gray-100">
-                Info: {product.description}
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">
+                <span className="text-base font-medium text-gray-800 dark:text-gray-100">Info: </span> 
+                {product.description}
                 </p>
               </CardContent>
 
@@ -186,7 +189,7 @@ const formFields = getMedictionFormFields(object, setObject, systemsList, effect
                 <MUIButton
                   fullWidth
                   variant="outlined"
-                  color="success"
+                  color="secondary"
                   sx={{ textTransform: "capitalize", borderRadius: "50px", py: 1.5 }}
                   onClick={() => onEdit(product)}
                 >

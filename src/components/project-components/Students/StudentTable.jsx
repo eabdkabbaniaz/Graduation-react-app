@@ -1,34 +1,32 @@
 import React, { useState } from "react";
 import { deleteStudent, importStudents } from "../../../api/studentApi";
 import Spinner from "../../ui-components/Spinner";
-// import ShowDetalisModel from "../../ui-components/ShowDetalisModel";
 import CustomTable from "../../ui-components/CustomTable";
 import { actions, studentColumns } from "../../../store/Data";
 import DeleteModal from "../../ui-components/DeleteModal";
 import CategoryFilter from "../../ui-components/CategoryFilter";
 import { fetchStudetnByCategory } from "../../../api/category";
-import Button from "../../ui-components/Button";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
 import Pagination from "../../ui-components/Pagination";
 
-const StudentTable = ({ setStudents, students, error, isWaiting, categories, onEdit, originalStudents, setIsEditModalOpen, page, setPage, lastPage, isSubmitting, setIsSubmitting }) => {
+const StudentTable = ({ setStudents, students, error, isWaiting, categories, onEdit, originalStudents, setIsEditModalOpen, page, setPage, lastPage, isSubmitting, setIsSubmitting,showModal,setShowModal }) => {
     const [selectedCategoryId, setSelectedCategoryId] = useState();
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [studentId, setStudentId] = useState(null);
     const [studentName, setStudentName] = useState("");
-    const [showAll, setShowAll] = useState("عرض الكل");
-    const [showModal, setShowModal] = useState(false);
+    const [showAll, setShowAll] = useState("عرض عينة");
 
     const [numberOfCategories, setNumberOfCategories] = useState(1);
     const [file, setFile] = useState(null);
     const [distributionMethod, setDistributionMethod] = useState("simple");
+    const [archive, setArchive] = useState("no");
 
     const handleFilter = async (categoryId) => {
-        if (!categoryId || categoryId === "عرض الكل") {
+        if (!categoryId || categoryId === "عرض عينة") {
             setStudents(originalStudents);
             setSelectedCategoryName("");
-            setSelectedCategoryId("عرض الكل");
+            setSelectedCategoryId("عرض عينة");
             return;
         }
         try {
@@ -68,6 +66,7 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
         formdata.append("category_number", numberOfCategories);
         formdata.append("file", file);
         formdata.append("distributionMethod", distributionMethod);   
+        formdata.append("archive", archive);   
 
         setIsSubmitting(true);
 
@@ -76,11 +75,12 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
 
             setNumberOfCategories(0);
             setFile("");
-            setDistributionMethod("");
+            setDistributionMethod("simple");
+            setArchive("no");
             setShowModal(false);
 
         } catch (err) {
-            console.error("❌ حدث خطأ أثناء الإرسال");
+            console.error("حدث خطأ أثناء الإرسال");
         } finally {
             setIsSubmitting(false);
         }
@@ -105,6 +105,14 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
             type: "file",
         },
         {
+            label: "archive",
+            value: archive,
+            onChange: (e) => setArchive(e.target.value),
+            required: true,
+            type: "select",
+            options: [{ label: "yes", value: "yes" },{ label: "no", value: "no" }],
+        },
+        {
             label: "distribution method",
             value: distributionMethod,
             onChange: (e) => setDistributionMethod(e.target.value),
@@ -117,10 +125,6 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
     return (
         <div className="p-4">
 
-            <div dir="rtl">
-                <Button signal="" name="import students" onClick={() => setShowModal(true)} />
-            </div>
-
             {showModal && <CreateAcountModalDynmic
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
@@ -130,7 +134,6 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
                 modalTitle="import students"
                 formFields={formFields}
                 submitButtonText={isSubmitting ? "import ..." : "import students"}
-                submitButtonVariant="primary"
             />}
 
             <CategoryFilter
@@ -221,7 +224,7 @@ const StudentTable = ({ setStudents, students, error, isWaiting, categories, onE
                     )}
                 />
             )}
-            <Pagination currentPage={page} totalPages={lastPage} onPageChange={(p) => setPage(p)} />
+            {/* <Pagination currentPage={page} totalPages={lastPage} onPageChange={(p) => setPage(p)} /> */}
         </div>
     );
 };

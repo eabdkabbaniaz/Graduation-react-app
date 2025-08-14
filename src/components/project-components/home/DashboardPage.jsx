@@ -2,7 +2,6 @@ import CustomCard from "../../ui-components/CustomCard";
 import CustomCharts from "../charts/CustomCharts";
 import { cards } from "../../../store/Data";
 import MainContent from "../layout/MainContent";
-import UniversityTable from "../medictions/system/SystemTable";
 import { useContext } from "react";
 import LangContext from "../../../context/LangContext";
 import { authLang } from "../../../lang/authLang";
@@ -11,9 +10,11 @@ import { langs } from "../../../lang/langs";
 export default function DashboardPage({ name , description }) {
 
     const {lang , setLang} = useContext(LangContext)
+    const role = localStorage.getItem("role")
 
     return (
         <MainContent name={name} description={description}>
+        
             {/* <!-- Cards --> */}
             <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
                 {/* <!-- Card --> */}
@@ -27,9 +28,8 @@ export default function DashboardPage({ name , description }) {
                     />
                 ))}
             </div>
-            <UniversityTable />
 
-            <CustomCharts />
+            {(role === "superVisorTeacher" || "teacher") && <CustomCharts />}
         </MainContent>
     )
 }

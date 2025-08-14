@@ -75,7 +75,6 @@ export default function EffectTable({effectsList, setEffectsList,isSubmitting, s
                 modalTitle={add ? "Add effect" :`Edit effect`}
                 formFields={formFields}
                 submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
-                submitButtonVariant="primary"
             />}
 
 

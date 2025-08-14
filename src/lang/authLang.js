@@ -66,6 +66,15 @@ export const authLang = {
     attendance_average: "متوسط الحضور",
     final_grade: "العلامة النهائية",
     Export: "تصدير",
+    medictions: "الأدوية",
+    medictionsDescription: "هذه الصفحة تحتوي على الأدوية ، التأثيرات ، أنظمة القلب والمعي الخ...",
+    switchAccount: "تبديل الحساب",
+    FinalGradesPerStudent: "العلامة النهائية لكل طالب",
+    studentName: "اسم الطالب",
+    finalGrade: "العلامة النهائية",
+    systems: "أنظمة",
+    effects: "التأثيرات",
+
 
 
 
@@ -180,8 +189,15 @@ export const authLang = {
     attendance_average: "attendance average",
     final_grade: "final grade",
     Export: "Export",
-
-
+    medictions: "Medictions",
+    medictionsDescription: "This page contains medications, effects, heart and bowel systems etc...",
+    switchAccount: "Switch Account",
+    FinalGradesPerStudent: "Final Grades per Student",
+    studentName: "Student Name",
+    finalGrade: "Final Grade",
+    systems: "Systems",
+    systems: "Systems",
+    effects: "Effects",
 
 
 
