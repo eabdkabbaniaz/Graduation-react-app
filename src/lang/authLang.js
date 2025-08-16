@@ -74,7 +74,10 @@ export const authLang = {
     finalGrade: "العلامة النهائية",
     systems: "أنظمة",
     effects: "التأثيرات",
-
+    Settings: "الإعدادات",
+    settingsDescription: "هذه صفحة إعدادات بما يخص العلامات و طريقة حسابها",
+    calculation_method: "طريقة الحساب",
+    final_mark: "العلامة النهائية",
 
 
 
@@ -198,7 +201,10 @@ export const authLang = {
     systems: "Systems",
     systems: "Systems",
     effects: "Effects",
-
+    Settings: "Settings",
+    settingsDescription: "This is a settings page regarding marks and how they are calculated.",
+    calculation_method: "calculation method",
+    final_mark: "final mark",
 
 
 

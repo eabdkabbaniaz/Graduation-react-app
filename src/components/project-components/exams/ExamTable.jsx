@@ -5,7 +5,7 @@ import DeleteModal from "../../ui-components/DeleteModal";
 import LangContext from "../../../context/LangContext";
 import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
-import { addExam, deleteExam, editExam, getExam } from "../../../api/exam";
+import { addExam, deleteExam, editExam, getExam, toggleExamStatus } from "../../../api/exam";
 import Spinner from "../../ui-components/Spinner";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
 import { getSubject } from "../../../api/subject";
@@ -72,6 +72,17 @@ export default function ExamTable() {
                 .catch(err => {
                     console.log("حدث خطأ:", err);
                 });
+        }
+    };
+
+    const toggleStatus = async (id) => {
+        try {
+            await toggleExamStatus(id);
+            const d = await getExam();
+            setExams(d);
+        } catch (err) {
+            console.error("Error toggling status:", err);
+            setError("Failed to update status");
         }
     };
 
@@ -150,7 +161,7 @@ export default function ExamTable() {
                     columns={examColumns}
                     data={exams}
                     renderRow={(exam) => (
-                        <ExamRow key={exam.id} exam={exam} lang={lang} actions={actions} onDelete={handleDelete} onEdit={onEdit} />
+                        <ExamRow key={exam.id} exam={exam} lang={lang} actions={actions} onDelete={handleDelete} onEdit={onEdit} toggleStatus={toggleStatus} />
                     )}
                 />)}
             {role === "teacher" ? "" : <FlexButton 

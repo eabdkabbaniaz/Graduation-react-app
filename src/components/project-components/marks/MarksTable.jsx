@@ -16,6 +16,8 @@ import DataPopup from "../../ui-components/DataPopup";
 
 export default function MarksTable() {
 
+    const role = localStorage.getItem("role")
+
     const [add, setAdd] = useState(false);
     const { lang, setLang } = useContext(LangContext);
     const [marks, setMarks] = useState([]);
@@ -33,7 +35,7 @@ export default function MarksTable() {
                 const data = await getMarks();
                 setMarks(data);
             } catch (error) {
-                setError("An error occurred while loading the data😥");
+                setError("An error occurred while loading the data");
             } finally {
                 setIsWaiting(false);
             }
@@ -113,7 +115,7 @@ export default function MarksTable() {
                         </tr>
                     )}
                 />)}
-            <FlexIcon onClick={() => setShowModal(!showModal)}  />
+            {role === "superVisorTeacher" && <FlexIcon onClick={() => setShowModal(!showModal)}  />}
         </>
     )
 }

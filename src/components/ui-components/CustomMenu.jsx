@@ -13,6 +13,7 @@ export default function CustomMenu(){
     const [showExportModal, setShowExportModal] = useState(false);
     const [showSettingModal, setShowSettingModal] = useState(false);
     const [object, setObject] = useState({
+        name: "",
         calculation_method: "",
         final_mark: 0
     });
@@ -56,7 +57,7 @@ export default function CustomMenu(){
                     options={options}
                 />
 
-                <CreateAcountModalDynmic
+                {/* <CreateAcountModalDynmic
                     isOpen={showSettingModal}
                     onClose={() => setShowSettingModal(false)}
                     // handleSubmit={handleSubmit}
@@ -66,7 +67,7 @@ export default function CustomMenu(){
                     formFields={formFields}
                     submitButtonText={isSubmitting ? "save ..." : "save"}
                     submitButtonVariant="primary"
-                />
+                /> */}
 
         <div className="flex justify-end">
             <div className="fixed top-[130px] right-[150px]">

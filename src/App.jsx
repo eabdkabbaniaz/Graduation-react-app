@@ -20,6 +20,7 @@ import SessionQRCode from './components/ui-components/SessionQRCode'
 import Semester from './components/project-components/semesters/Semester'
 import Marks from './components/project-components/marks/Marks'
 import Medictions from './components/project-components/medictions/mediction/Medications'
+import Settings from './components/project-components/settings/Settings'
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/sessions" element={<Sessions name={authLang[langs[lang]].Sessions} description={authLang[langs[lang]].sessionsDescription} setSessionNameQR={setSessionNameQR} setCode={setCode} />} />            
         <Route path="/subjects" element={<Subjects name={authLang[langs[lang]].Subjects} description={authLang[langs[lang]].subjectsDescription} />} /> 
         <Route path="/marks" element={<Marks name={authLang[langs[lang]].Marks} description={authLang[langs[lang]].marksDescription} />} />                       
+        <Route path="/settings" element={<Settings name={authLang[langs[lang]].Settings} description={authLang[langs[lang]].settingsDescription} />} />                       
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/questions" element={<Questions />} />

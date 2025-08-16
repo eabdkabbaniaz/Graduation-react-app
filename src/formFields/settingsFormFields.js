@@ -1,5 +1,13 @@
 export const getSettingsFormFields = (object, setObject, options = []) => [
     {
+        label: "name",
+        value: object.name,
+        onChange: (e) => {
+          setObject({ ...object, name: e.target.value });
+        },        
+        required: true,
+    },
+    {
         label: "calculation method",
         type: "select",
         value: object.calculation_method,

@@ -29,7 +29,7 @@ export default function DashboardPage({ name , description }) {
                 ))}
             </div>
 
-            {(role === "superVisorTeacher" || "teacher") && <CustomCharts />}
+            {(role === "superVisorTeacher" || role === "teacher") && <CustomCharts />}
         </MainContent>
     )
 }

@@ -1,7 +1,7 @@
 import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
 
-export default function ExamRow({exam, lang, actions, onDelete, onEdit}) {
+export default function ExamRow({exam, lang, actions, onDelete, onEdit, toggleStatus}) {
 
   const role = localStorage.getItem("role");
 
@@ -24,9 +24,9 @@ export default function ExamRow({exam, lang, actions, onDelete, onEdit}) {
         </div>
       </td>
 
-      <td className="px-4 py-3 text-xs">
+      <td className="px-4 py-3 text-xs" onClick={() => toggleStatus(exam.id)}>
         <span
-          className={`px-2 py-1 text-[12px] font-semibold leading-tight rounded-full 
+          className={`px-2 py-1 text-[12px] font-semibold leading-tight rounded-full cursor-pointer 
             ${
               exam.status === 0
                 ? "text-red-700 bg-red-100 dark:bg-red-700 dark:text-red-700"

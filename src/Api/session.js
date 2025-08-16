@@ -2,8 +2,7 @@ import axiosInstance from "./axiosInstance";
 
 export const getSession = async () => {
     try {
-        const response = await axiosInstance.get(`/session/index/1`);
-        //console.log("response ", response.data);
+        const response = await axiosInstance.get(`/session/index/4`);
         const data = response.data.data;
         return data;
     } catch (error) {
@@ -36,12 +35,12 @@ export const editSession = async (id, data) => {
     }
 };
 
-export const attend = async (code) => {
-    try {
-        const response = await axiosInstance.post(`/attend`, {code});
-        return response.data;
-    } catch (error) {
-        console.error("invalid QR", error);
-        throw error;
-    }
-};
+// export const attend = async (code) => {
+//     try {
+//         const response = await axiosInstance.post(`/attend`, {code});
+//         return response.data;
+//     } catch (error) {
+//         console.error("invalid QR", error);
+//         throw error;
+//     }
+// };

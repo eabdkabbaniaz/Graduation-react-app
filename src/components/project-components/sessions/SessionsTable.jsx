@@ -20,7 +20,7 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
     const [sessions, setSessions] = useState([]);
     const [isWaiting, setIsWaiting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [object, setObject] = useState({ name: "", drug_ids: [] ,experience_id:1,status: true });
+    const [object, setObject] = useState({ name: "", drug_ids: [] ,experience_id:4,status: 0,mark:0 });
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(null);
     const [add, setAdd] = useState(false);
@@ -34,7 +34,7 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                 const data = await getSession();
                 setSessions(data);
             } catch (error) {
-                setError("An error occurred while loading the data😥");
+                setError("An error occurred while loading the data");
             } finally {
                 setIsWaiting(false);
             }
@@ -63,16 +63,19 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
     };
 
     const onEdit = (obj) => {
+        console.log(obj)
         setSessionId(obj.id)
         setObject({
-            ...object,
             name: obj.name,
-            drug_ids: obj.drug?.map((d) => d.id),
+            drug_ids: obj.drugs?.map((d) => d.id),
+            status: obj.status,
+            mark: obj.mark,
         });
         setShowModal(true)
     }
 
     const handleSubmit = async (e, isAdd) => {
+        console.log(object)
         e.preventDefault();
         setIsSubmitting(true);
         try {
@@ -82,6 +85,15 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                 await editSession(sessionId, object);
             }
             setShowModal(false);
+            setObject({
+                name: "", 
+                drug_ids: [],
+                experience_id:4,
+                status: 0,
+                mark: 0
+            })
+            setError("")
+            setAdd("")
         } catch (err) {
             setError(" An error occurred during submission");
         } finally {
@@ -97,21 +109,46 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
             required: true,
         },
         {
+            label: "status",
+            value: object.status,
+            type: "select",
+            onChange: (e) => setObject({ ...object, status: e.target.value }),
+            options: [
+                { label: "active", value: 1 },
+                { label: "Inactive", value: 0 },
+            ],
+            required: true,
+        },
+        {
+            label: "mark",
+            value: object.mark,
+            onChange: (e) => setObject({ ...object, mark: e.target.value }),
+            type: "number",
+            min: 0,
+            required: true,
+        },
+        {
             label: "Drugs",
             type: "checkbox-group",
             value: object.drug_ids || '',
             onChange: (value) => {
                 const updated = object.drug_ids?.includes(value)
-                    ? object.drug_ids.filter((v) => v !== value)
-                    : [...(object.drug_ids || []), value];
+                  ? object.drug_ids.filter((v) => v !== value)
+                  : [...(object.drug_ids || []), String(value)];                            
 
                 setObject({ ...object, drug_ids: updated });
             },
             required: true,
             options: [
-                { label: "نور ادرينالين", value: "1" },
-                { label: "ادرينالين", value: "2" },
-                { label: "استيل كولين", value: "3" },
+                { label: "acetylcholine", value: 1 },
+                { label: "Adrenaline", value: 2 },
+                { label: "Atropine", value: 3 },
+                { label: "NorAdrenaline", value: 4 },
+                { label: "Alpha Beta blocker", value: 5 },
+                { label: "Magnesium", value: 6 },
+                { label: "Carbachol", value: 7 },
+                { label: "Pilocarpine", value: 8 },
+                { label: "barium", value: 9 },
             ],
         },
     ];
@@ -132,6 +169,9 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                     setObject({
                         name: "", 
                         drug_ids: [],
+                        experience_id:4,
+                        status: 0,
+                        mark: 0
                     })
                     setError("")
                     setAdd(false)
@@ -142,7 +182,6 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                 modalTitle={add ? "Add Exam" :`Edit Exam`}
                 formFields={formFields}
                 submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
-                submitButtonVariant="primary"
             />}
 
             {isWaiting ? (<Spinner />) : (
@@ -160,8 +199,14 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                             </td>
 
                             <td className="px-4 py-3 text-xs">
-                                <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">
+                                <span className="px-2 py-1 font-semibold leading-tight">
                                     {session.experience_id.name}
+                                </span>
+                            </td>
+
+                            <td className="px-4 py-3 text-xs">
+                                <span className="px-2 py-1 font-semibold leading-tight">
+                                    {session.teacher_id.name}
                                 </span>
                             </td>
 
@@ -177,6 +222,18 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                                         <option disabled>لا توجد أدوية</option>
                                     )}
                                 </select>
+                            </td>
+
+                            <td className="px-4 py-3 text-xs">
+                                <span className={`px-2 py-1 font-semibold leading-tight ${session.status === 1 ? "text-green-700 bg-green-100 dark:bg-green-700 dark:text-green-100" : "text-red-700 bg-red-100 dark:bg-res-700 dark:text-red-100"}  rounded-full`}>
+                                    {session.status === 1 ? "Active" : "Inactive"}
+                                </span>
+                            </td>
+
+                             <td className="px-4 py-3 text-xs">
+                                <span className="px-2 py-1 font-semibold leading-tight">
+                                    {session.mark}
+                                </span>
                             </td>
 
                             <td className="px-4 py-3 text-sm">
@@ -205,9 +262,9 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                                             navigate("/qr")
                                         }}
                                     >
-                                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-5 h-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
+                                        <svg fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
                                         </svg>
                                     </button>
                                 </div>

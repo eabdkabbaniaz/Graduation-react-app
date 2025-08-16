@@ -10,12 +10,8 @@ export default function FlexIcon({ onClick }) {
           onClick={onClick}
           aria-label="Settings"
           size="large"
-          // sx={{
-          //   bgcolor: "rgba(0,0,0,0.05)",
-          //   "&:hover": { bgcolor: "rgba(0,0,0,0.10)" },
-          // }}
         >
-          <SettingsIcon fontSize="inherit" />
+          <SettingsIcon fontSize="inherit" className="dark:text-gray-100" />
         </IconButton>
       </div>
     </div>

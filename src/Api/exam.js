@@ -34,3 +34,13 @@ export const editExam = async (id, data) => {
         throw error;
     }
 };
+
+export const toggleExamStatus = async (id) => {
+    try {
+        const response = await axiosInstance.get(`/exams/updatestatus/${id}`);
+        return response.data;
+    } catch (err) {
+        console.error("فشل تغيير الحالة", err);
+        throw err;
+    }
+};

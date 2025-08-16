@@ -50,7 +50,7 @@ export default function ExportPopup({ isOpen, onClose, options }){
 
   return (
     <div className="fixed inset-0 z-30 flex items-center bg-gray-600 bg-opacity-50 justify-center">
-      <div className="bg-white rounded-xl shadow-xl p-6 w-[400px]">
+      <div className="bg-white rounded-xl shadow-xl p-6 w-[400px] dark:bg-gray-700 dark:text-gray-100">
         <h2 className="text-xl font-semibold mb-4 text-center">Export Option</h2>
         <div className="space-y-4">
           {options.map((opt) => (
@@ -70,7 +70,7 @@ export default function ExportPopup({ isOpen, onClose, options }){
                   placeholder="write column name..."
                   value={inputValues[opt.label] || ""}
                   onChange={(e) => handleInputChange(opt.label, e.target.value)}
-                  className="mt-2 w-full border rounded px-3 py-1"
+                  className="mt-2 w-full border rounded px-3 py-1 dark:bg-gray-700 dark:text-gray-100"
                 />
               )}
             </div>
