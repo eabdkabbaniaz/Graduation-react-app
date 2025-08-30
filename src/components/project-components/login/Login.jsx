@@ -47,7 +47,8 @@ export default function Login() {
     try {
       const response = await loginApi({
         university_number: email,
-        password: password
+        password: password,
+        device_token: "db-9FzUzSdmumfyC_uk-9m:APA91bHqbMkwiHbnjWCCzPEdLCGAlYnFBgD_yhEMrizIn4FkrTTpwJhviidUvfagODszMtLgoa1BYwHBi2l3-Z6u99ceRrcc09GHDSM9XgUobZaLdxEObUs"
       })
 
       localStorage.setItem("pharmaToken", response.token)

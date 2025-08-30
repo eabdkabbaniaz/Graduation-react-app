@@ -24,7 +24,7 @@ export const userMarkDetails = async (id) => {
 
 export const exportMarks = async (data,head) => {
     try {
-        const response = await axiosInstance.post(`/export`, data,head);
+        const response = await axiosInstance.post(`/export`, data , head);
         return response;
     } catch (error) {
         console.error("فشل في تصدير ملف العلامات:", error);

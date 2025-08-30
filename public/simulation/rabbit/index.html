@@ -2,113 +2,213 @@
 <html lang="en">
 
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharmacology Lab Simulation Rabbit</title>
+
+<!-- Chart.js -->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="rabbits.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+<style>
+       #volume {
+        width: 100% !important;  /* ياخد عرض الكارت */
+        max-width:270px;        /* هون تحكم بالحجم */
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #4b0082, #8a2be2); /* خلفية موف */
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        height: 100vh;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 25px;
+        background: #ffffff;
+        color: #333;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+        width: 320px;
+        transition: transform 0.3s;
+    }
+
+    .controls:hover {
+        transform: translateY(-5px);
+    }
+
+    h2 {
+        text-align: center;
+        color: #8a2be2;
+        margin-bottom: 15px;
+    }
+
+    input, select {
+        padding: 12px 12px 12px 35px; /* مساحة للأيقونة */
+        font-size: 15px;
+        border: 2px solid #8a2be2;
+        border-radius: 8px;
+        width: 100%;
+        outline: none;
+        transition: border 0.3s;
+        background-repeat: no-repeat;
+        background-position: 10px center;
+    }
+
+    input:focus, select:focus {
+        border-color: #4b0082;
+    }
+
+    #volume {
+        background-image: url('https://img.icons8.com/ios-filled/20/000000/water.png'); /* أيقونة حجم */
+    }
+
+    #drugs {
+        background-image: url('https://img.icons8.com/ios-filled/20/000000/pill.png'); /* أيقونة دواء */
+    }
+
+    #concentration {
+        background-image: url('https://img.icons8.com/ios-filled/20/000000/test-tube.png'); /* أيقونة تركيز */
+    }
+
+    button {
+        padding: 14px;
+        font-size: 16px;
+        width: 100%;
+        background: #8a2be2;
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        /* transition: background 0.3s, transform 0.2s; */
+    }
+
+    button:hover {
+        background: #4b0082;
+        transform: scale(1.03);
+    }
+
+    .chart-container {
+        flex-grow: 1;
+        padding: 20px;
+    }
+
+    canvas {
+        background: #fff;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+        width: 850px !important;
+        height: 550px !important;
+    }
+
+    #selectedDrug {
+        font-size: 14px;
+        font-style: italic;
+        color: #555;
+    }
+
+    input::placeholder,
+    select option[disabled] {
+        color: #888;
+        font-style: italic;
+    }
+</style>
 </head>
 
 <body>
-    <script>initial()</script>
-    <button onclick="initial()">initial</button>
-    <button onclick="Cleans()">Clean</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.05)">Acetylcholine(0.05)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.1)">Acetylcholine(0.1)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.2)">Acetylcholine2(0.2)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.3)">Acetylcholine2(0.3)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.4)">Acetylcholine2(0.4)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.5)">Acetylcholine2(0.5)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.6)">Acetylcholine2(0.6)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.7)">Acetylcholine2(0.7)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.8)">Acetylcholine2(0.8)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,0.9)">Acetylcholine2(0.9)</button>
-    <button onclick="FinalBathConcentration(2E-1,1,1)">Acetylcholine2(1)</button>
-    <br>
-    <button onclick="FinalBathConcentration(1E-1,5,0.05)">adrenaline(0.05)</button>
-    <button onclick="FinalBathConcentration(1E-1,5,0.1)">adrenaline1(0.1)</button>
-    <button onclick="FinalBathConcentration(1E-1,5,0.2)">adrenaline1(0.2)</button>
-    <button onclick="FinalBathConcentration(1E-1,5,0.3)">adrenaline(0.3)1</button>
-    <button onclick="FinalBathConcentration(1E-1,5,0.4)">adrenaline1(0.4)</button>
-    <button onclick="FinalBathConcentration(1E-1,5,0.5)">adrenaline1(0.5)</button><br>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.05)">Barium (0.05)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.1)">Barium (0.1)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.2)">Barium (0.2)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.4)">Barium (0.3)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.5)">Barium (0.5)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.6)">Barium (0.6)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.7)">Barium (0.7)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.8)">Barium (0.8)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 0.9)">Barium (0.9)</button>
-    <button onclick="FinalBathConcentration(1E-1, 2, 1)">Barium 1/button>
+<div class="controls">
+    <h2>⚗️ Drug Control Panel</h2>
 
+    <select id="drugs">
+        <option value="">🔽 Select Drug</option>
+    </select>
 
-    <br>
-    <button onclick="FinalBathConcentration(1E-1, 7, 0.05)">Magnesium</button>
-    <button onclick="FinalBathConcentration(1E-1, 7, 0.1)">Magnesium1</button>
-    <button onclick="FinalBathConcentration(1E-1, 7, 0.2)">Magnesium2</button>
-    <br>
-    <br>
-    <button onclick="FinalBathConcentration(1E-1, 6, 0.05)">AlphaBeta Blocker(0.05)</button>
-    <button onclick="FinalBathConcentration(1E-1, 6, 0.1)">Phentolamine (Alpha Blocker)0.1</button>
-    <button onclick="FinalBathConcentration(1E-1, 6, 0.2)">Phentolamine (Alpha Blocker)0.2</button>
-    <button onclick="FinalBathConcentration(1E-1, 6, 0.3)">AlphaBeta Blocker(0.3)</button>
-    <button onclick="FinalBathConcentration(1E-1, 6, 0.4)">Phentolamine (Alpha Blocker)0.4</button>
-    <button onclick="FinalBathConcentration(1E-1, 6, 0.5)">Phentolamine (Alpha Blocker)0.5</button>
-    <br>
-    <button onclick="FinalBathConcentration(2E-1, 4, 0.05)">Atropine</button>
-    <button onclick="FinalBathConcentration(2E-1, 4, 0.1)">Atropine</button>
-    <button onclick="FinalBathConcentration(2E-1, 4, 0.15)">Atropine</button>
-    <button onclick="FinalBathConcentration(2E-1, 4, 0.3)">Atropine</button>
-    <button onclick="FinalBathConcentration(2E-1, 4, 0.4)">Atropine</button>
+    <input type="number" id="volume" step="0.01" placeholder="Enter Volume (ml)">
 
+    <select id="concentration">
+        <option value="" disabled selected>🔬 Select Concentration (M)</option>
+        <option value="0.1">0.1</option>
+        <option value="0.2">0.2</option>
+        <option value="0.3">0.3</option>
+    </select>
+
+    <button onclick="submitDrug()">➕ Add Drug</button>
+    <button onclick="Clean()" style="background:#e53935;">🧹 Clean</button>
+
+    <p id="selectedDrug"></p>
+</div>
+
+<div class="chart-container">
     <canvas id="myChart" width="400" height="200"></canvas>
-    <script>
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label:
-                        'بيانات عشوائية',
-                    data: [],
+</div>
 
-                    borderColor: 'rgb(75, 192, 192)',
-                    fill: false,
-                   pointRadius: 0 // <=== هذا يخفي النقاط
+<script>
+    initial();
 
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        beginAtZero: false,
-                        min: 0,
+        var NewDrugs = [
+            { "id": 1, "Name": "Acetylcholine" },
+            { "id": 2, "Name": "Carbachol" },
+            { "id": 3, "Name": "Pilocarpine" },
+            { "id": 4, "Name": "Noradrenaline (Norepinephrine)" },
+            { "id": 5, "Name": "Atropine" },
+            { "id": 6, "Name": "Adrenaline (Epinephrine)" },
+            { "id": 7, "Name": "Alpha Beta blocker" },
+            { "id": 8, "Name": "Magnesium" }
+        ];
 
-                        stepSize: 1,
-                    },
-                    y: {
-                        beginAtZero: false,
+    var selectElement = document.getElementById("drugs");
+    var selectedDrugElement = document.getElementById("selectedDrug");
 
-                        stepSize: 5,
-                        ticks: {
+    NewDrugs.forEach(function (drug) {
+        var option = document.createElement("option");
+        option.value = drug.id;
+        option.textContent = drug.Name;
+        selectElement.appendChild(option);
+    });
 
-                        }
-                    }
-                }
+    function submitDrug() {
+        var selectedId = document.getElementById("drugs").value;
+        var volume = document.getElementById("volume").value;
+        var concentration = document.getElementById("concentration").value;
+
+        if (selectedId === "" || volume === "") {
+            alert("⚠️ Please select a drug and enter volume.");
+            return;
+        }
+
+        selectedDrugElement.textContent = `Selected Drug ID: ${selectedId}, Volume: ${volume} ml, Concentration: ${concentration} M`;
+        FinalBathConcentration(parseFloat(concentration), parseInt(selectedId), parseFloat(volume));
+    }
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: 'Rabbit intestines Response', data: [], borderColor: '#8a2be2', backgroundColor: 'rgba(138,43,226,0.1)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.3 }] },
+        options: {
+            responsive: true,
+            animation: { duration: 0 },
+            scales: {
+                x: { title: { display: true, text: 'Time (s)', color: '#8a2be2' }, ticks: { color: '#333' } },
+                y: { title: { display: true, text: 'Response', color: '#8a2be2' }, ticks: { color: '#333' } }
             }
-        });
-        setInterval(() => {
+        }
+    });
+       setInterval(() => {
             const newData = stimulation();
-            if (newData && newData.x !== undefined && newData.y !== undefined) {
-                myChart.data.labels.push(newData.y);
-                myChart.data.datasets[0].data.push(newData.x);
-                myChart.update();
-            }
-        }, 300);
-
-    </script>
+            myChart.data.labels.push(newData.y);
+            myChart.data.datasets[0].data.push(newData.x);
+            myChart.update();
+        }, 200);
+</script>
 </body>
-
 </html>

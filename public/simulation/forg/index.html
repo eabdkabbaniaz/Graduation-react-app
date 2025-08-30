@@ -2,183 +2,212 @@
 <html lang="en">
 
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
-    <script src="final.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #d4edda; 
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            height: 100vh;
-            align-items: center;
-            justify-content: space-between;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharmacology Lab Simulation</title>
 
-        .controls {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch; 
-            gap: 15px;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px; /* تحديد عرض مناسب للقسم */
-        }
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="final.js"></script>
 
-        label {
-            font-weight: bold;
-            display: block; 
-            margin-bottom: 5px;
-        }
+<style>
+       #volume {
+        width: 100% !important;  /* ياخد عرض الكارت */
+        max-width:270px;        /* هون تحكم بالحجم */
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #4b0082, #8a2be2); /* خلفية موف */
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        height: 100vh;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+    }
 
-        select,
-        input {
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid #4CAF50;
-            border-radius: 5px;
-            width: 100%; 
-            display: block; 
-        }
+    .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 25px;
+        background: #ffffff;
+        color: #333;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+        width: 320px;
+        transition: transform 0.3s;
+    }
 
-        button {
-            padding: 15px; 
-            font-size: 18px;
-            width: 100%; 
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    .controls:hover {
+        transform: translateY(-5px);
+    }
 
-        button:hover {
-            background-color: #388E3C;
-        }
+    h2 {
+        text-align: center;
+        color: #8a2be2;
+        margin-bottom: 15px;
+    }
 
-        .chart-container {
-            flex-grow: 1;
-            padding: 20px;
-        }
+    input, select {
+        padding: 12px 12px 12px 35px; /* مساحة للأيقونة */
+        font-size: 15px;
+        border: 2px solid #8a2be2;
+        border-radius: 8px;
+        width: 100%;
+        outline: none;
+        transition: border 0.3s;
+        background-repeat: no-repeat;
+        background-position: 10px center;
+    }
 
-        canvas {
-            background: #fff;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 800px !important;
-            height: 550px !important;
-        }
-    </style>
+    input:focus, select:focus {
+        border-color: #4b0082;
+    }
+
+    #volume {
+        background-image: url('https://img.icons8.com/ios-filled/20/000000/water.png'); /* أيقونة حجم */
+    }
+
+    #drugs {
+        background-image: url('https://img.icons8.com/ios-filled/20/000000/pill.png'); /* أيقونة دواء */
+    }
+
+    #concentration {
+        background-image: url('https://img.icons8.com/ios-filled/20/000000/test-tube.png'); /* أيقونة تركيز */
+    }
+
+    button {
+        padding: 14px;
+        font-size: 16px;
+        width: 100%;
+        background: #8a2be2;
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+        background: #4b0082;
+        transform: scale(1.03);
+    }
+
+    .chart-container {
+        flex-grow: 1;
+        padding: 20px;
+    }
+
+    canvas {
+        background: #fff;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+        width: 850px !important;
+        height: 550px !important;
+    }
+
+    #selectedDrug {
+        font-size: 14px;
+        font-style: italic;
+        color: #555;
+    }
+
+    input::placeholder,
+    select option[disabled] {
+        color: #888;
+        font-style: italic;
+    }
+</style>
 </head>
 
 <body>
+<div class="controls">
+    <h2>⚗️ Drug Control Panel</h2>
 
-    <div class="controls">
+    <select id="drugs">
+        <option value="">🔽 Select Drug</option>
+    </select>
 
-        <label for="drugs">Select Drug</label>
-        <select id="drugs">
-            <option value="">Select Drug</option>
-        </select>
+    <input type="number" id="volume" step="0.01" placeholder="Enter Volume (ml)">
 
-        <label for="volume">Enter volume</label>
-        <input type="number" id="volume" step="0.01" placeholder="أدخل الحجم">
+    <select id="concentration">
+        <option value="" disabled selected>🔬 Select Concentration (M)</option>
+        <option value="0.1">0.1</option>
+        <option value="0.2">0.2</option>
+        <option value="0.3">0.3</option>
+    </select>
 
-        
-        <label for="concentration">Enter concentration:</label>
-        <select id="concentration">
-            <option value="1E-1">1E-1</option>
-            <option value="1E-2">1E-2</option>
-            <option value="1E-3">1E-3</option>
-        </select>
+    <button onclick="submitDrug()">➕ Add Drug</button>
+    <button onclick="Clean()" style="background:#e53935;">🧹 Clean</button>
 
-        <button onclick="submitDrug()">Add drug</button>
-<button onclick=Clean()>Clean</button>
-        <p id="selectedDrug"></p>
-    </div>
+    <p id="selectedDrug"></p>
+</div>
 
+<div class="chart-container">
     <canvas id="myChart" width="400" height="200"></canvas>
+</div>
 
-    <script>
-        var NewDrugs = [
-            { "id": 0, "Name": "Acetylcholine" },
-            { "id": 3, "Name": "Magnesium " },
-            { "id": 2, "Name": "Atropine" },
-            { "id": 1, "Name": "Adrenaline (Epinephrine)" },
-            { "id": 4, "Name": "Prazosin" },
-        ];
+<script>
+    Initial();
 
-        var selectElement = document.getElementById("drugs");
-        var selectedDrugElement = document.getElementById("selectedDrug");
+    var NewDrugs = [
+        { "id": 0, "Name": "Acetylcholine" },
+        { "id": 1, "Name": "Adrenaline (Epinephrine)" },
+        { "id": 2, "Name": "Atropine" },
+        { "id": 3, "Name": "Magnesium" },
+        { "id": 4, "Name": "Prazosin" }
+    ];
 
-        NewDrugs.forEach(function (drug) {
-            var option = document.createElement("option");
-            option.value = drug.id;
-            option.textContent = drug.Name;
-            selectElement.appendChild(option);
-        });
+    var selectElement = document.getElementById("drugs");
+    var selectedDrugElement = document.getElementById("selectedDrug");
 
-        function submitDrug() {
-            var selectedId = document.getElementById("drugs").value;
-            var volume = document.getElementById("volume").value;
-            var concentration = document.getElementById("concentration").value;
+    NewDrugs.forEach(function (drug) {
+        var option = document.createElement("option");
+        option.value = drug.id;
+        option.textContent = drug.Name;
+        selectElement.appendChild(option);
+    });
 
-            if (selectedId === "" || volume === "") {
-                alert("Enter drug and volume.");
-                return;
-            }
+    function submitDrug() {
+        var selectedId = document.getElementById("drugs").value;
+        var volume = document.getElementById("volume").value;
+        var concentration = document.getElementById("concentration").value;
 
-            selectedDrugElement.textContent = `المعرف: ${selectedId}, الحجم: ${volume}, التركيز: ${concentration}`;
-            FinalBathConcentration(parseFloat(concentration), parseInt(selectedId), parseFloat(volume));
+        if (selectedId === "" || volume === "") {
+            alert("⚠️ Please select a drug and enter volume.");
+            return;
         }
 
-    </script>
+        selectedDrugElement.textContent = `Selected Drug ID: ${selectedId}, Volume: ${volume} ml, Concentration: ${concentration} M`;
+        FinalBathConcentration(parseFloat(concentration), parseInt(selectedId), parseFloat(volume));
+    }
 
-    <script>
-  const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'ما عم لاقي اسم حطو ',
-                    data: [],
-                    borderColor: 'rgb(75, 192, 192)',
-                    fill: false,
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        beginAtZero: false,
-                        min: 0,
-                        stepSize: 1,
-                    },
-                    y: {
-                        beginAtZero: false,
-                        stepSize: 5,
-                    }
-                }
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: 'Heart Pulse Response', data: [], borderColor: '#8a2be2', backgroundColor: 'rgba(138,43,226,0.1)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.3 }] },
+        options: {
+            responsive: true,
+            animation: { duration: 0 },
+            scales: {
+                x: { title: { display: true, text: 'Time (s)', color: '#8a2be2' }, ticks: { color: '#333' } },
+                y: { title: { display: true, text: 'Response', color: '#8a2be2' }, ticks: { color: '#333' } }
             }
-        });
-        setInterval(() => {
-            const newData = stimulation();
-            pulseCount =pulse();
-            console.log("pulseCount "+pulseCount)                
-            myChart.data.labels.push(newData[0]);
-            myChart.data.datasets[0].data.push(newData[1]);
-            myChart.update();
-        },1);
+        }
+    });
 
-    </script>
+    setInterval(() => {
+        const newData = stimulation();
+        pulseCount = pulse();
+        console.log("pulseCount " + pulseCount);
+        myChart.data.labels.push(newData[0]);
+        myChart.data.datasets[0].data.push(newData[1]);
+        myChart.update();
+    }, 100);
+</script>
 </body>
-
 </html>

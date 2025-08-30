@@ -164,7 +164,7 @@ export default function SemesterTable() {
                         </tr>
                     )}
                 />)}
-            <div className="flex justify-end">
+            {/* <div className="flex justify-end">
                 <div className="fixed bottom-4 right-6 mt-4">
                     <Button
                         name={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Semester}
@@ -175,7 +175,7 @@ export default function SemesterTable() {
                         }}
                     />
                 </div>
-            </div>
+            </div> */}
         </>
     )
 }

@@ -2,7 +2,7 @@ import CustomTable from "../../ui-components/CustomTable";
 import Spinner from "../../ui-components/Spinner";
 import { actions } from "../../../store/Data";
 import DeleteModal from "../../ui-components/DeleteModal";
-import { createTeacher, deleteTeacher, fetchTeacher, toggleTeacherStatus, updateTeacher } from "../../../api/teacher";
+import { createTeacher, deleteTeacher, fetchTeacher, toggleTeacherStatus, updateTeacher, updateTeacherRole } from "../../../api/teacher";
 import { useContext, useState } from "react";
 import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
@@ -57,7 +57,7 @@ const TeacherTable = ({ teachers, setTeacher, isWaiting, setIsWaiting, error, se
         setTeacherId(teacher.id);
         setTeacherName(teacher.name)
         setTeacherEmail(teacher.email)
-        setTeacherRole(teacher.role)
+        setTeacherRole(teacher?.roles[0].name)
         setShowModal(true)
     }
 
@@ -71,15 +71,24 @@ const TeacherTable = ({ teachers, setTeacher, isWaiting, setIsWaiting, error, se
                     email: teacherEmail,
                     ROLE: teacherRole,
                 });
+                await updateTeacherRole(teacherId, {
+                    role: teacherRole,
+                });
                 setTeacher(prev =>
                     prev.map(exp =>
-                        exp.id === teacherId
-                            ? { ...exp, name: teacherName, email: teacherEmail, ROLE: teacherRole }
-                            : exp
+                      exp.id === teacherId
+                        ? {
+                            ...exp,
+                            name: teacherName,
+                            email: teacherEmail,
+                            roles: [{ name: teacherRole }],
+                          }
+                        : exp
                     )
-                );
+                  );
+                  
             } else {
-                const {newTeach , message} = await createTeacher({
+                const { newTeach, message } = await createTeacher({
                     name: teacherName,
                     email: teacherEmail,
                     ROLE: teacherRole
@@ -146,19 +155,16 @@ const TeacherTable = ({ teachers, setTeacher, isWaiting, setIsWaiting, error, se
             ) : (
 
                 <CustomTable
-                    columns={["name", "email", "status", "Operation"]}
+                    columns={["name", "email", "status", "role", "Operation"]}
                     data={teachers}
                     renderRow={(teacher) => (
                         <tr className="text-gray-700 dark:text-gray-400" key={teacher.id}>
                             <td className="px-4 py-3">
                                 <div className="flex items-center text-sm">
                                     <div className="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-                                        <img
-                                            className="object-cover w-full h-full rounded-full"
-                                            src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-                                            alt=""
-                                            loading="lazy"
-                                        />
+                                        <div className="flex items-center justify-center w-full h-full rounded-full bg-purple-600 text-gray-200 font-bold">
+                                            {teacher.name?.charAt(0).toUpperCase()}
+                                        </div>
                                         <div
                                             className="absolute inset-0 rounded-full shadow-inner"
                                             aria-hidden="true"
@@ -169,6 +175,7 @@ const TeacherTable = ({ teachers, setTeacher, isWaiting, setIsWaiting, error, se
                                     </div>
                                 </div>
                             </td>
+
                             <td className="px-4 py-3 text-sm">
                                 {teacher.email}
                             </td>
@@ -183,6 +190,11 @@ const TeacherTable = ({ teachers, setTeacher, isWaiting, setIsWaiting, error, se
                                         {teacher.teacher?.is_active === 0 ? authLang[langs[lang]].Inactive : authLang[langs[lang]].Active}
                                     </span>
                                 </button>
+                            </td>
+
+                            <td className="px-4 py-3 text-sm">
+                                {Array.isArray(teacher.roles) ? teacher?.roles[0]?.name : ""}
+                                
                             </td>
 
 
@@ -209,8 +221,8 @@ const TeacherTable = ({ teachers, setTeacher, isWaiting, setIsWaiting, error, se
                         </tr>
                     )}
                 />)}
-            {showMessage && <DeleteModal 
-                onClose={() => setShowMessage("")} onClick={() => setShowMessage("")}  message={showMessage} deleteButton="Ok"
+            {showMessage && <DeleteModal
+                onClose={() => setShowMessage("")} onClick={() => setShowMessage("")} message={showMessage} deleteButton="Ok"
             />}
 
             <FlexButton

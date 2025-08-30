@@ -6,6 +6,7 @@ import { useContext } from "react";
 import LangContext from "../../../context/LangContext";
 import { authLang } from "../../../lang/authLang";
 import { langs } from "../../../lang/langs";
+import Semester from "../semesters/Semester"
 
 export default function DashboardPage({ name , description }) {
 
@@ -28,6 +29,8 @@ export default function DashboardPage({ name , description }) {
                     />
                 ))}
             </div>
+
+            <Semester name="Semesters" />
 
             {(role === "superVisorTeacher" || role === "teacher") && <CustomCharts />}
         </MainContent>

@@ -1,6 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import Button from './Button';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 const CreateAcountModalDynmic = ({
     isOpen,
@@ -15,9 +19,14 @@ const CreateAcountModalDynmic = ({
     submitButtonVariant,
     size,
     innerButton = false,
-    innerButtonSignal, 
-    innerButtonName, 
-    innerButtonOnClick
+    innerButtonSignal,
+    innerButtonName,
+    innerButtonOnClick,
+    chips,
+    addChip,
+    onAddChip,
+    onDeleteChip,
+    isChipDisabled=false
 }) => {
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -40,7 +49,7 @@ const CreateAcountModalDynmic = ({
                                 <Dialog.Title className="text-lg font-bold text-gray-900 dark:text-gray-100">
                                     {modalTitle}
                                 </Dialog.Title>
-                                <Button 
+                                <Button
                                     signal={innerButtonSignal}
                                     name={innerButtonName}
                                     onClick={innerButtonOnClick}
@@ -108,7 +117,16 @@ const CreateAcountModalDynmic = ({
                                                         ))}
                                                     </div>
                                                 </div>
-                                            )
+                                            ) :
+                                            field.type === "autocomplete" ? (
+                                            <Autocomplete
+                                                options={field.options}
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                renderInput={(params) => <TextField {...params} />}
+                                            />
+                                            ) 
+                                            
                                                 : (
                                                     <input
                                                         type={field.type || "text"}
@@ -122,6 +140,10 @@ const CreateAcountModalDynmic = ({
                                                 )}
                                     </div>
                                 ))}
+
+                                {addChip && <button type="button" disabled={isChipDisabled} onClick={onAddChip} className="px-4 py-2 hover:bg-blue-700 font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
+                                    {addChip}
+                                </button>}
 
                                 <div className="flex justify-center gap-4 pt-2">
                                     <Button
@@ -140,6 +162,20 @@ const CreateAcountModalDynmic = ({
                                         onClick={onClose}
                                     />
                                 </div>
+
+                                {chips?.length > 0 && (
+                                    <Stack direction="row" spacing={1} className="flex-wrap">
+                                        {chips.map((chip, idx) => (
+                                            <Chip
+                                                key={idx}
+                                                label={chip.question}
+                                                onDelete={() => onDeleteChip?.(idx)} 
+                                            />
+                                        ))}
+                                    </Stack>
+                                )}
+
+
                             </form>
                         </Dialog.Panel>
                     </Transition.Child>

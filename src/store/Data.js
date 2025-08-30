@@ -95,21 +95,21 @@ export const cards = [
     {
         id: 2,
         icon: "M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z",
-        name: "Account_balance",
-        number:  "$ 46,760.89",
+        name: "Teachers",
+        number:  "21",
         className: "p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500"
     },
     {
         id: 3,
         icon: "M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z",
-        name: "New_sales",
-        number: "376",
+        name: "Total_Drugs",
+        number: "10",
         className: "p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500"
     },
     {
         id: 4,
         icon: "M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z",
-        name: "Pending_contacts",
+        name: "Average_Experinces",
         number: "35",
         className: "p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500"
     },
@@ -185,3 +185,4 @@ export const examColumns = ["Exams","Status","Subject","duration","Operation"];
 export const subjectColumns = ["id","name","Operation"];
 export const marksColumns = ["student_name","exam_score","assessment_score","attendance_average","final_grade"];
 export const calculationmethodsColumns = ["name","calculation_method","final_mark","Operation"];
+export const showSessionColumns = ["Question","question_mode","questions_mark","answers","Operation"];

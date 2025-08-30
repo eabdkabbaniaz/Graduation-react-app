@@ -10,8 +10,12 @@ import Spinner from "../../ui-components/Spinner";
 import CreateAcountModalDynmic from "../../ui-components/CreateAcountModalDynmic";
 import { useNavigate } from "react-router-dom";
 import Button from "../../ui-components/Button";
+import CategoryFilter from "../../ui-components/CategoryFilter";
+import { fetchExperinence } from "../../../api/experinence";
 
-export default function SessionsTable({setSessionNameQR,setCode}) {
+export default function SessionsTable({ setSessionNameQR, setCode, setShowSession, setShowSessionName, setShowSessionId }) {
+
+    const role = localStorage.getItem("role");
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [sessionName, setSessionName] = useState();
@@ -20,18 +24,41 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
     const [sessions, setSessions] = useState([]);
     const [isWaiting, setIsWaiting] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [object, setObject] = useState({ name: "", drug_ids: [] ,experience_id:4,status: 0,mark:0 });
+    const [object, setObject] = useState({ name: "", drug_ids: [], experience_id: 1, status: 0, mark: 0 });
     const [showModal, setShowModal] = useState(false);
     const [error, setError] = useState(null);
     const [add, setAdd] = useState(false);
 
+    const [selectedCategoryId, setSelectedCategoryId] = useState("عرض عينة"); // 
+    const [filteredSessions, setFilteredSessions] = useState([]);
+
+    useEffect(() => {
+        setFilteredSessions(sessions); 
+    }, [sessions]);
+
+    const handleFilter = async (experienceId) => {
+        setSelectedCategoryId(experienceId);
+      
+        if (experienceId === "عرض عينة") {
+        const sessionsData = await getSession(1);
+          setFilteredSessions(sessionsData.flat());
+        } else {
+          const filtered = await getSession(experienceId);
+          setFilteredSessions(filtered);
+        }
+      };
+      
     const navigate = useNavigate();
+
+    const [experiences, setExperiences] = useState([]);
 
     useEffect(() => {
         const getData = async () => {
             try {
                 setIsWaiting(true);
-                const data = await getSession();
+                const data = await getSession(1);
+                const dataExp = await fetchExperinence();
+                setExperiences(dataExp);
                 setSessions(data);
             } catch (error) {
                 setError("An error occurred while loading the data");
@@ -67,7 +94,7 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
         setSessionId(obj.id)
         setObject({
             name: obj.name,
-            drug_ids: obj.drugs?.map((d) => d.id),
+            drug_ids: obj.drugs?.map((d) => String(d.id)),
             status: obj.status,
             mark: obj.mark,
         });
@@ -81,14 +108,14 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
         try {
             if (isAdd) {
                 await addSession(object);
-            }else {
+            } else {
                 await editSession(sessionId, object);
             }
             setShowModal(false);
             setObject({
-                name: "", 
+                name: "",
                 drug_ids: [],
-                experience_id:4,
+                experience_id: 1,
                 status: 0,
                 mark: 0
             })
@@ -128,27 +155,38 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
             required: true,
         },
         {
+            label: "experince",
+            value: object.experience_id,
+            type: "select",
+            onChange: (e) => setObject({ ...object, experience_id: e.target.value }),
+            options: experiences.map((expr) => ({
+                label: expr.name,
+                value: expr.id
+            })),
+            required: true,
+        },
+        {
             label: "Drugs",
             type: "checkbox-group",
             value: object.drug_ids || '',
             onChange: (value) => {
                 const updated = object.drug_ids?.includes(value)
-                  ? object.drug_ids.filter((v) => v !== value)
-                  : [...(object.drug_ids || []), String(value)];                            
+                    ? object.drug_ids.filter((v) => v !== value)
+                    : [...(object.drug_ids || []), String(value)];
 
                 setObject({ ...object, drug_ids: updated });
             },
             required: true,
             options: [
-                { label: "acetylcholine", value: 1 },
-                { label: "Adrenaline", value: 2 },
-                { label: "Atropine", value: 3 },
-                { label: "NorAdrenaline", value: 4 },
-                { label: "Alpha Beta blocker", value: 5 },
-                { label: "Magnesium", value: 6 },
-                { label: "Carbachol", value: 7 },
-                { label: "Pilocarpine", value: 8 },
-                { label: "barium", value: 9 },
+                { label: "Acetylcholine", value: "1" },
+                { label: "Adrenaline (Epinephrine)", value: "2" },
+                { label: "Atropine", value: "3" },
+                { label: "Noradrenaline (Norepinephrine)", value: "4" },
+                { label: "Alpha Beta Blocker", value: "5" },
+                { label: "Magnisum", value: "6" },
+                { label: "Carbachol", value: "7" },
+                { label: "Prazosin", value: "8" },
+                { label: "Barium", value: "9" },
             ],
         },
     ];
@@ -162,24 +200,31 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                 message={`do you confirm to delete Session ${sessionName}`}
             />}
 
+            <CategoryFilter
+                categories={experiences}
+                handleFilter={handleFilter}
+                selectedCategoryId={selectedCategoryId}
+                intialValue="عرض عينة"
+            />
+
             {showModal && <CreateAcountModalDynmic
                 isOpen={showModal}
                 onClose={() => {
                     setShowModal(false)
                     setObject({
-                        name: "", 
+                        name: "",
                         drug_ids: [],
-                        experience_id:4,
+                        experience_id: 1,
                         status: 0,
                         mark: 0
                     })
                     setError("")
                     setAdd(false)
-                }}                
-                handleSubmit={add ? (e) => handleSubmit(e,true) : (e) => handleSubmit(e,false)}
+                }}
+                handleSubmit={add ? (e) => handleSubmit(e, true) : (e) => handleSubmit(e, false)}
                 isSubmitting={isSubmitting}
                 error={error}
-                modalTitle={add ? "Add Exam" :`Edit Exam`}
+                modalTitle={add ? "Add Session" : `Edit Session`}
                 formFields={formFields}
                 submitButtonText={isSubmitting ? add ? "Adding..." : "Editing..." : add ? "Add" : "Edit"}
             />}
@@ -187,10 +232,15 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
             {isWaiting ? (<Spinner />) : (
                 <CustomTable
                     columns={sessionColumns}
-                    data={sessions}
+                    data={filteredSessions}
                     renderRow={(session) => (
                         <tr dir={lang === "ar" ? "rtl" : ""} className="text-gray-700 dark:text-gray-400" key={session.id}>
-                            <td className="px-4 py-3">
+
+                            <td className="px-4 py-3 cursor-pointer" onClick={() => {
+                                (role !== "manger" && setShowSession(true))
+                                setShowSessionName(session.name)
+                                setShowSessionId(session.id)
+                            }}>
                                 <div className="flex items-center text-sm">
                                     <div className="mr-4">
                                         <p className="font-semibold">{session.name}</p>
@@ -230,7 +280,7 @@ export default function SessionsTable({setSessionNameQR,setCode}) {
                                 </span>
                             </td>
 
-                             <td className="px-4 py-3 text-xs">
+                            <td className="px-4 py-3 text-xs">
                                 <span className="px-2 py-1 font-semibold leading-tight">
                                     {session.mark}
                                 </span>

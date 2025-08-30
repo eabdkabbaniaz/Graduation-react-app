@@ -299,7 +299,7 @@ export default function Questions() {
                 size="h-[700px] overflow-y-scroll"
             />}
 
-            {(role === "teacher" || "manger") ? "" : <div className="fixed right-[20px] bottom-[20px]">
+            {(role === "teacher" || role === "manger") ? "" : <div className="fixed right-[20px] bottom-[20px]">
                 <Button name="add question" onClick={() => setShowAddModal(true)} />
             </div>}
 

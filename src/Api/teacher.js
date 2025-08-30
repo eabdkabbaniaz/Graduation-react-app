@@ -42,6 +42,16 @@ export const updateTeacher = async (id, data) => {
     }
 };
 
+export const updateTeacherRole = async (id, data) => {
+    try {
+        const response = await axiosInstance.put(`/teacher/role/${id}`, data);
+        return response.data;
+    } catch (error) {
+        console.error("فشل في تحديث دور المعيد:", error);
+        throw error;
+    }
+};
+
 export const toggleTeacherStatus = async (id) => {
     try {
         const response = await axiosInstance.get(`/teacher/toggleActivation/${id}`);

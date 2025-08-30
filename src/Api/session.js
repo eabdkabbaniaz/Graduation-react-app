@@ -1,12 +1,12 @@
 import axiosInstance from "./axiosInstance";
 
-export const getSession = async () => {
+export const getSession = async (expId) => {
     try {
-        const response = await axiosInstance.get(`/session/index/4`);
+        const response = await axiosInstance.get(`/session/index/${expId}`);
         const data = response.data.data;
         return data;
     } catch (error) {
-        console.error("Error fetching teacher:", error);
+        console.error("Error fetching session:", error);
         throw error;
     }
 };
@@ -44,3 +44,35 @@ export const editSession = async (id, data) => {
 //         throw error;
 //     }
 // };
+
+export const showSession = async () => {
+    try {
+        const response = await axiosInstance.get(`/sessionQuestion/index`);
+        const data = response.data.data;
+        return data;
+    } catch (error) {
+        console.error("Error fetching session Question:", error);
+        throw error;
+    }
+};
+
+export const addSessionQuestion = async (data) => {
+    try {
+        const response = await axiosInstance.post(`/sessionQuestion/store`, data);
+        return response.data.data;
+    } catch (error) {
+        console.error("فشل في إنشاء سؤال جلسة:", error);
+        throw error;
+    }
+};
+
+export const deleteSessionQuestion = async (id) => {
+    try {
+        const response = await axiosInstance.delete(`/sessionQuestion/destroy/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("فشل في حذف سؤال جلسة:", error);
+        throw error;
+    }
+};
+

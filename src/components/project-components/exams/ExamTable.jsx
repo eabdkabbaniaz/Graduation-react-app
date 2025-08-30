@@ -164,7 +164,7 @@ export default function ExamTable() {
                         <ExamRow key={exam.id} exam={exam} lang={lang} actions={actions} onDelete={handleDelete} onEdit={onEdit} toggleStatus={toggleStatus} />
                     )}
                 />)}
-            {role === "teacher" ? "" : <FlexButton 
+            {(role === "teacher" || role === "manger") ? "" : <FlexButton 
                 label={authLang[langs[lang]].Add + " " + authLang[langs[lang]].Exam} 
                 signal="+"
                 onClick={() => {

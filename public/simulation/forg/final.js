@@ -94,7 +94,7 @@ var Drugs = [
     "Tissue": 0,
     "Units": "M",
     "Unknown": false,
-    "Antagonist": "True",
+    "Antagonist": true,
     "FinalBathConcentration": 0.0,
     "DisplayBathConcentration": 0.0,
     "BathConcentration": 0.0
@@ -166,11 +166,19 @@ var Drugs = [
     "BathConcentration": 0.0
   },
 ]
-initialArray = [RandomInitial(), RandomInitial(), RandomInitial(), RandomInitial(), RandomInitial()];
-RMaxArray = [RandomRMax(), RandomRMax(), RandomRMax(), RandomRMax(), RandomRMax()];
-
+let initialArray;
+let RMaxArray;
+var atroblock;
+function Initial() {
+  atroblock = AtrBlock();
+  initialArray = [RandomInitial(), RandomInitial(), RandomInitial(), RandomInitial(), RandomInitial()];
+  RMaxArray = [RandomRMax(), RandomRMax(), RandomRMax(), RandomRMax(), RandomRMax()];
+}
 function RandomInitial() {
-  return Math.random() * (0.0002 - 0.000069) + 0.000069
+  return Math.random() * (0.003 - 0.001) + 0.001
+}
+function AtrBlock() {
+  return Math.random() * (2.2 - 2) + 2
 }
 function RandomRMax() {
   return Math.random() * (0.006 - 0.008000000000000002) + 0.008000000000000002
@@ -203,6 +211,7 @@ let T = baseT;
 let smallStart = T;
 let smallEnd = T + T * 0.25;
 let fullCycle = smallEnd;
+let prablocker = 0;
 
 //pulseCount: عدد النبضات المرسومة.
 //lastCycle: يحتفظ بالدورة السابقة لمقارنة هل بدأنا دورة جديدة أم لا.
@@ -213,19 +222,54 @@ let lastCycle = 0;
 let pendingStretchRatio = null;
 
 
+WashoutActive = false;
+function wash() {
+  const MixingRate = 0.5;
+  const WashoutRate = 0.1; // 10% decrease per cycle
+  const threshold = 0; // Threshold to stop washout
+  let allBelowThreshold = true;
+
+  for (let i = 0; i < Drugs.length; i++) {
+    if (WashoutActive) {
+      // خفّض التراكيز تدريجيًا بنسبة 10%
+      Drugs[i].FinalBathConcentration *= (1 - WashoutRate);
+      Drugs[i].BathConcentration *= (1 - WashoutRate);
+      Drugs[i].DisplayBathConcentration *= (1 - WashoutRate);
+    }
+
+    if (Drugs[i].FinalBathConcentration > threshold) {
+      allBelowThreshold = false;
+    }
+  }
+
+  InitialMixing += 1; // تأكد أن هذا المتغير معرف في الخارج
+
+  if (WashoutActive && allBelowThreshold) {
+    for (let i = 0; i < Drugs.length; i++) {
+      Drugs[i].FinalBathConcentration = 0.0;
+      Drugs[i].BathConcentration = 0.0;
+      Drugs[i].DisplayBathConcentration = 0.0;
+    }
+    WashoutActive = false;
+  }
+}
 
 function Clean() {
-  MgEffect=1;
-  for (i = 0; i < Drugs.length; i++) {
-    Drugs[i]["BathConcentration"] = 0.0;
-    Drugs[i]["DisplayBathConcentration"] = 0.0;
-    Drugs[i]["FinalBathConcentration"] = 0.0;
+  WashoutActive = true;
+  ss = 1;
+  MgEffect = 1;
+  // for (i = 0; i < Drugs.length; i++) {
+  //   Drugs[i]["BathConcentration"] = 0.0;
+  //   Drugs[i]["DisplayBathConcentration"] = 0.0;
+  //   Drugs[i]["FinalBathConcentration"] = 0.0;
 
-  }
+  // }
   inhibitionFactor = 1;
+  inhibitionFactor1 = 1;
   effectiveInhibition = 1;
-  alphaBlock = 0;
+  alphaBlock = 1;
   atropineBlock = 0;
+  prablocker = 0;
   Id = 100;
   AddedConcentration = 0.0;
   InitialMixing = 1;
@@ -239,9 +283,10 @@ function FinalBathConcentration(StockConcentration, DrugsId, Volume) {
   Id = DrugsId;
   AddedConcentration = (StockConcentration * Volume) / BathVolume;
   if (RMaxArray[Id] < AddedConcentration) {
+    // console.log("1111111111111111111111111111111111111111111111111")
     AddedConcentration = RMaxArray[Id];
   }
-  console.log(AddedConcentration);
+  // console.log(AddedConcentration);
   newDisplayBathConcentration = (Drugs[DrugsId].DisplayBathConcentration + AddedConcentration).toFixed(10);
   newFinalBathConcentration = (Drugs[DrugsId].FinalBathConcentration + AddedConcentration * randNum).toFixed(10);
   Update();
@@ -277,7 +322,7 @@ function Update() {
       Atr();
     }
     if (Drugs[Id].ShortName === "Pra") {
-      Pra();
+      an();
     }
     if (Drugs[Id].ShortName === "Adr") {
       Adr();
@@ -304,7 +349,7 @@ function Ach() {
   const inhibitedEffect_mAchR = effect_mAchR * (1 - atropineBlock);
   // //console.log(w1 * inhibitedEffect_mAchR + w2 * effect_nAchR)
   if (atropineBlock > 0) {
-    inhibitionFactor = Math.abs(Math.max(0, inhibitionFactor - (w1 * inhibitedEffect_mAchR + w2 * effect_nAchR)) - 100 * (Drugs[Id].FinalBathConcentration));
+    inhibitionFactor = Math.abs(Math.max(1, inhibitionFactor - (w1 * inhibitedEffect_mAchR + w2 * effect_nAchR)) - 100 * (Drugs[Id].FinalBathConcentration));
     if (inhibitionFactor === 0) inhibitionFactor = 1;
     ////console.log(Drugs[Id].FinalBathConcentration)
 
@@ -328,23 +373,58 @@ function Atr() {
   const antagonistFactor = hillEquation(Drugs[Id].FinalBathConcentration, EC50_mAchR);
   const w1 = 0.6;
   atropineBlock = w1 * antagonistFactor;
-  inhibitionFactor = Math.abs(Math.max(0, (1 + Math.min(atropineBlock, 1))) + 1000 * (Drugs[Id].FinalBathConcentration));
-  ////console.log(Drugs[Id].FinalBathConcentration)
+  inhibitionFactor1 = Math.abs(Math.max(0, (1 + Math.min(atropineBlock, 1))) + 100 * (Drugs[Id].FinalBathConcentration));
 
 }
+
+let baseWavePeriod = 2 * Math.PI; // الطول الطبيعي للموجة الكبيرة
 
 function Pra() {
   const EC50_Alpha_AdrenR = Drugs[Id].EC50_Alpha_AdrenR;
   const antagonistFactor = hillEquation(Drugs[Id].FinalBathConcentration, EC50_Alpha_AdrenR);
-  const w1 = 0.5;
-  alphaBlock = w1 * antagonistFactor;
-  effectiveInhibition = Math.abs(Math.max(0, 1 - Math.min(alphaBlock, 1)) - 100 * (Drugs[Id].FinalBathConcentration));
 
-
-
+  const w1 = 0.6;
+  prablocker = Math.min(1, w1 * antagonistFactor); // من 0 → 1 (0 = بلا حجب, 1 = حجب كامل)
 }
-var alphaBlock = 0;
+
+var effectiveInhibition1 = 1;
+var alphaBlock = 1;
+
 function Adr() {
+  const EC50_Alpha_AdrenR = Drugs[Id].EC50_Alpha_AdrenR;
+  const EC50_Alpha2_AdrenR = Drugs[Id].EC50_Alpha2_AdrenR;
+  const EC50_Beta_AdrenR = Drugs[Id].EC50_Beta_AdrenR;
+
+  const effect_Alpha_AdrenR = hillEquation(Drugs[Id].FinalBathConcentration, EC50_Alpha_AdrenR);
+  const effect_Alpha2_AdrenR = hillEquation(Drugs[Id].FinalBathConcentration, EC50_Alpha2_AdrenR);
+  const effect_Beta_AdrenR = hillEquation(Drugs[Id].FinalBathConcentration, EC50_Beta_AdrenR);
+
+  const w1 = 0.4;
+  const w2 = 0.2;
+  const w3 = 0.7;
+
+  // تأثير Adr بدون حجب
+  let adrEffect = w1 * effect_Alpha_AdrenR + w2 * effect_Alpha2_AdrenR + w3 * effect_Beta_AdrenR;
+
+  // Pra يحجب α-adrenoceptors → يقلل adrEffect
+  adrEffect *= (1 - prablocker);
+  // console.log(adrEffect)
+  // السعة (amplitude) تتأثر بـ adrEffect
+  inhibitionFactor = Math.max(0.5, 2 + adrEffect) +100 * (Drugs[Id].FinalBathConcentration);
+; // 0.5 = حد أدنى
+
+
+  // الطول (period) يتأثر أيضًا
+  // Adr عادة يقصر الموجة → نصغر T
+  // Pra يرجعها للوضع الطبيعي
+  stretchRatio = 1 / (1 + adrEffect);  // كلما adrEffect أكبر → T أصغر
+  T = baseWavePeriod * stretchRatio;
+  smallStart = T;
+  smallEnd = T + T * 0.25;
+  fullCycle = smallEnd;
+}
+
+function an() {
 
   const EC50_Alpha_AdrenR = Drugs[Id].EC50_Alpha_AdrenR;
   const EC50_Alpha2_AdrenR = Drugs[Id].EC50_Alpha2_AdrenR;
@@ -353,29 +433,19 @@ function Adr() {
   const effect_Alpha_AdrenR = hillEquation(Drugs[Id].FinalBathConcentration, EC50_Alpha_AdrenR);
   const effect_Alpha2_AdrenR = hillEquation(Drugs[Id].FinalBathConcentration, EC50_Alpha2_AdrenR);
   const effect_Beta_AdrenR = hillEquation(Drugs[Id].FinalBathConcentration, EC50_Beta_AdrenR);
-  const w1 = 0.4;
+  const w1 = 0.4 * 100 * Drugs[Id].FinalBathConcentration;
+  const w4 = 0.4;
   const w2 = 0.2;
   const w3 = 0.7;
 
-  const inhibitedEffect_Alpha_AdrenR = effect_Alpha_AdrenR * (1 - alphaBlock);
-  inhibitionFactor = w1 * inhibitedEffect_Alpha_AdrenR + w2 * effect_Alpha2_AdrenR + w3 * effect_Beta_AdrenR;
-  if (atropineBlock > 0) {
-    effectiveInhibition = Math.abs(Math.max(0, (effectiveInhibition - Math.min(inhibitionFactor, 1))) + 100 * (Drugs[Id].FinalBathConcentration));
+  const inhibitedEffect_Alpha_AdrenR = effect_Alpha_AdrenR * (2 - alphaBlock);
+  inhibitionFactor2 = -1 * (w1 * inhibitedEffect_Alpha_AdrenR + w2 * effect_Alpha2_AdrenR + w3 * effect_Beta_AdrenR);
 
-    if (effectiveInhibition === 0) effectiveInhibition = 1;
-    ////console.log(Drugs[Id].FinalBathConcentration)
-
-  }
-
-  else {
-    effectiveInhibition = Math.abs(Math.max(0, (Math.min(inhibitionFactor, 1))) + 100 * (Drugs[Id].FinalBathConcentration));
-    ////console.log("inhibitionFactor      " + Drugs[Id].FinalBathConcentration)
-
-  }
-
-  //console.log("effectiveInhibition      " + effectiveInhibition);
+  alphaBlock = 3 * 1 / (Math.abs(Math.max(1, (Math.min(inhibitionFactor2, 1))) + 1000 * (Drugs[Id].FinalBathConcentration)));
 
 }
+
+
 function Mg() {
 
   const EC50_mAchR = Drugs[Id].EC50_mAchR;
@@ -397,65 +467,64 @@ function Mg() {
   if (MgEffect == 0) {
     MgEffect = 1;
   }
-  // }
-  // newAmplitude = amplitude * effectiveInhibition;
-  // frequency = frequency * effectiveInhibition;
-  // console.log("newAmplitude: " + NewDrugs[id].ShortName + " " + newAmplitude);
-  // console.log("frequency: " + NewDrugs[id].ShortName + " " + frequency);
-  //console.log("effectiveInhibition      " + effectiveInhibition);
 
 }
 var effectiveInhibition = 1;
-//           function frogPulse(t) {
-// var T = 2 * Math.PI ;     // دورة كاملة للموجة الكبيرة
-// var smallStart = T;      // بداية الموجة الصغيرة
-// var smallEnd = T + T * 0.25; // نهاية الموجة الصغيرة
-// var fullCycle = T + T * 0.25; // دورة النبضة الكاملة
-
-//             const localT = t % fullCycle;
-
-//   // موجة كبيرة
-//   if (localT <= T) {
-//     return  Math.sin(localT) * 30;
-//   }
-//   // موجة صغيرة
-//   else if (localT > T && localT <= smallEnd) {
-//     const smallT = (localT - T) / (smallEnd - smallStart) * Math.PI;
-//     return Math.sin(smallT) * 8;
-//   }
-
-//   return 0;
-// }
 function updateStretch() {
-  // const userInput = document.getElementById("stretchFactor").value;
-  pendingStretchRatio = inhibitionFactor; // تحويل من نسبة إلى رقم عشري
+  pendingStretchRatio = ss; // تحويل من نسبة إلى رقم عشري
 
-  // T = baseT / stretchRatio;
-  // smallStart = T;
-  // smallEnd = T + T * 0.25;
-  // fullCycle = smallEnd;
 }
 
-function frogPulse(t) {
-  const localT = t % fullCycle;
+function frogPulse(t, dt) {
+  const localT = 3 * t % fullCycle;
 
   if (localT <= T) {
     return Math.sin(localT / T * 2 * Math.PI) * (30 * inhibitionFactor);
   } else if (localT > T && localT <= smallEnd) {
     const smallT = (localT - T) / (smallEnd - smallStart) * Math.PI;
+    console.log("wwwwwwwww", Math.sin(smallT) * (8 * dt * 10 * inhibitionFactor))
     return Math.sin(smallT) * (8 * inhibitionFactor);
+
   }
 
   return 0;
 }
-
+var ss = 1;
+var ateffect = 0;
 function stimulation() {
-
-  // requestAnimationFrame(draw);
-
-  // تحديث العداد عند نهاية كل دورة كاملة
+  wash();
   currentCycle = Math.floor(t / fullCycle);
+  ss = inhibitionFactor * inhibitionFactor1 * effectiveInhibition * MgEffect * alphaBlock
+  console.log("ffffffff", inhibitionFactor);
+  T = baseT
+  if (ss !== 1 && Drugs[2].FinalBathConcentration != 0) {
+    T = T * ss / 5
+    console.log("TTTTTTTTTTTTTTTT", T);
+  }
+  if (ss !== 1 && Drugs[1].FinalBathConcentration != 0) {
+    T = T *ss / 8
+    console.log("AAAAAAAAAAAAAAAAAAAAAA", T);
+  }
+    if (ss !== 1 && Drugs[Id].ShortName === "Mg") {
+      T = T * ss * 5
+      console.log("rrrrrrrrrrr")
+    }
+  if (ss !== 1 && Drugs[Id].ShortName === "Ach") {
+    console.log("atroblock ", atroblock)
+    console.log("ateffect ", ateffect)
+    if (inhibitionFactor1 < atroblock) {
+      T = T * ss * 10
+      console.log("rrrrrrrrrrr")
+    }
 
+    else {
+      inhibitionFactor = 1;
+      Drugs[0].FinalBathConcentration = 0.0;
+    }
+  }
+  smallStart = T;
+  smallEnd = T + (T * 0.25);
+  fullCycle = smallEnd;
   if (pendingStretchRatio !== null) {
     stretchRatio = pendingStretchRatio;
     T = baseT;
@@ -467,19 +536,25 @@ function stimulation() {
 
   if (currentCycle > lastCycle) {
     pulseCount++;
-    // document.getElementById('counter').innerText = `النبضات: ${pulseCount}`;
 
   }
   //  currentCycle = Math.floor(t / fullCycle);
   lastCycle = currentCycle;
+  // var dt = 0.05 * ss;
+  console.log("inhibitionFactor" + inhibitionFactor)
 
-  const y = frogPulse(t);
-  var dt = 0.05 * inhibitionFactor * effectiveInhibition * MgEffect;
+  const y = frogPulse(t, dt);
+  var dt = 0.05 * inhibitionFactor * inhibitionFactor1 * effectiveInhibition * MgEffect * alphaBlock;
+
+  console.log("dt" + dt)
+
   t += dt;
-  console.log("MgEffect    " + MgEffect);
-  return [t, y, dt];
+  // console.log("MgEffect    " + MgEffect);
+  return [t, y];
 }
 MgEffect = 1
 function pulse() {
   return pulseCount;
 }
+
+var inhibitionFactor1 = 1;

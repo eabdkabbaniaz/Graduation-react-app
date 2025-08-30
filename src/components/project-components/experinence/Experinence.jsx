@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import MainContent from "../layout/MainContent";
-import ExperinenceTable from "./experinenceTable";
+import ExperinenceTable from "./ExperinenceTable";
 import { fetchExperinence, toggleExperinenceStatus, deleteExperinence, updateExperinence, createExperinence } from "../../../api/experinence";
 import LangContext from "../../../context/LangContext";
 import Button from "../../ui-components/Button";
@@ -35,7 +35,7 @@ const Experinence = ({ name, description }) => {
             const data = await fetchExperinence();
             setExperiences(data);
         } catch (error) {
-            setError("An error occurred while loading data 😥");
+            setError("An error occurred while loading data");
         } finally {
             setIsWaiting(false);
         }

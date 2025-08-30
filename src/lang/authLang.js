@@ -78,6 +78,13 @@ export const authLang = {
     settingsDescription: "هذه صفحة إعدادات بما يخص العلامات و طريقة حسابها",
     calculation_method: "طريقة الحساب",
     final_mark: "العلامة النهائية",
+    Total_Drugs: "إجمالي الأدوية",
+    Average_Experinces: "متوسط التجارب",
+    Question: "الأسئلة",
+    question_mode: "نوع السؤال",
+    questions_mark: "علامة السؤال",
+    answers: "الأجابات",
+    role: "الدور",
 
 
 
@@ -205,8 +212,13 @@ export const authLang = {
     settingsDescription: "This is a settings page regarding marks and how they are calculated.",
     calculation_method: "calculation method",
     final_mark: "final mark",
-
-
+    Total_Drugs: "Total Drugs",
+    Average_Experinces: "Average Experinces",
+    Question: "Question",
+    question_mode: "question mode",
+    questions_mark: "questions mark",
+    answers: "answers",
+    role: "role",
 
 
     

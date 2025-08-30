@@ -21,7 +21,7 @@ export default function SessionQRCode({ sessionName, code, size = 500 }) {
   return (
     <div className='flex items-center justify-center mt-[100px]'>
       {/* <QRCode value={`${message} في الجلسة ${sessionName}`} size={size} /> */}
-      <QRCode value={`تم تسجيل الحضور في جلسة "${sessionName}"`} size={size} />
+      <QRCode value={code} size={size} />
     </div>
   );
 }

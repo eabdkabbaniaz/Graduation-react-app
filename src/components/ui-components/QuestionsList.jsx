@@ -9,7 +9,7 @@ export default function QuestionsList({ questions, handleDelete, onEdit }) {
             {questions.map((q, index) => (
                 <li key={q.id} className="relative rounded-[100px] bg-purple-600 hover:bg-gray-500 text-white p-4">
                     {q.question}:
-                    {(role === "manger" || "teacher") ? "" : actions.map((a => (
+                    {(role === "manger" || role === "teacher") ? "" : actions.map((a => (
                         <div
                             key={a.id}
                             aria-label={a.label}

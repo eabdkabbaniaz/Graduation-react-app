@@ -2,7 +2,7 @@ import StudentCreateForm from "../students/StudentCreateForm";
 import StudentTable from "./StudentTable";
 import StudentEditForm from "../students/StudentEditForm";
 import MainContent from "../layout/MainContent";
-import { fetchStudents } from "../../../Api/studentApi";
+import { fetchStudents } from "../../../api/studentApi";
 import { fetchCategory } from "../../../api/categories";
 import { useEffect, useState } from "react";
 
